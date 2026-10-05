@@ -4,18 +4,35 @@
   "municipalityOfficeChecks": 11142,
   "states": 27,
   "statuses": {
-    "unique": 7326,
-    "pending": 3812,
-    "tie": 4
+    "unique": 11134,
+    "tie": 8
   },
   "ties": [
+    {
+      "city": "MG-40916",
+      "office": 7,
+      "votes": 542,
+      "leaders": [
+        "130002542804",
+        "130002535330"
+      ]
+    },
+    {
+      "city": "MG-46990",
+      "office": 6,
+      "votes": 560,
+      "leaders": [
+        "130002542044",
+        "130002542026"
+      ]
+    },
     {
       "city": "MT-90093",
       "office": 7,
       "votes": 397,
       "leaders": [
-        "110002542649",
-        "110002541763"
+        "110002541763",
+        "110002542649"
       ]
     },
     {
@@ -44,9 +61,27 @@
         "210002541514",
         "210002534584"
       ]
+    },
+    {
+      "city": "SP-62014",
+      "office": 7,
+      "votes": 113,
+      "leaders": [
+        "250002536384",
+        "250002536389"
+      ]
+    },
+    {
+      "city": "SP-67598",
+      "office": 6,
+      "votes": 679,
+      "leaders": [
+        "250002536743",
+        "250002535995"
+      ]
     }
   ],
-  "nonElectedWithHigherVotes": 1526,
+  "nonElectedWithHigherVotes": 2303,
   "contrastExamples": [
     {
       "city": "AC-01007",

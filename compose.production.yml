@@ -1,6 +1,6 @@
 services:
   dashpolitico:
-    image: radar-eleitoral:20261005-legibilidade
+    image: radar-eleitoral:20261005-atualizacao
     build:
       context: .
       args:

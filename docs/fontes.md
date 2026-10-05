@@ -1,5 +1,7 @@
 # Fontes, campos e coleta
 
+> Atualização de dados de 05/10/2026 às 12h37: veja [relatório atual](atualizacao-20261005.md). Os números da primeira coleta abaixo são históricos.
+
 Data-base solicitada: 05/10/2026. Todos os resultados usados vieram do ambiente **oficial** de produção e foram validados com `f=o`. Não foram utilizados resultados de notícias, agregadores, outras eleições ou simulados.
 
 ## Fontes primárias

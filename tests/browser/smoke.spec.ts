@@ -82,8 +82,9 @@ test("pendencia oficial nao vira vencedor local", async ({ page }) => {
     (c) =>
       c.leaders["6"].status === "pending" &&
       (c.leaders["7"] ?? c.leaders["8"]).status === "pending",
-  )!;
-  await page.goto(root + "/municipios/" + pending.id);
+  );
+  test.skip(!pending, "A coleta atual não possui mais municípios com ambos os cargos pendentes");
+  await page.goto(root + "/municipios/" + pending!.id);
   await expect(
     page.getByRole("heading", { name: "Confirmação de eleitos pendente" }),
   ).toHaveCount(2);

@@ -1,5 +1,7 @@
 # Validação — Radar Eleitoral Brasil 2026
 
+> Atualização de dados de 05/10/2026 às 12h37: veja [relatório atual](atualizacao-20261005.md). Os números da primeira coleta abaixo são históricos.
+
 **FASE:** MVP. **STATUS:** PASSOU COM RESSALVAS DE DADOS E COBERTURA GEOGRÁFICA.
 
 Snapshot validado: `20261005-primeira-coleta-8bc8e63f`.
@@ -57,7 +59,7 @@ Exemplo real: Bujari/AC, Estadual. Não eleito com 809 votos locais; líder entr
 
 Empates preservados: Estadual em MT-90093 (397 votos); Federal em PR-78638 (58), RS-86665 (378) e RS-88650 (792). Nenhum desempate foi inventado.
 
-Veja `independent-audit.json` para os identificadores e exemplos auditados.
+Veja `evidencias/auditoria-inicial.json` para os identificadores e exemplos auditados.
 
 ## Amostragem e agregações
 
