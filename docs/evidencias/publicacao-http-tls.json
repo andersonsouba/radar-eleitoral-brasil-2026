@@ -79,5 +79,25 @@
   },
   "container": "running healthy",
   "deployExit": 0,
-  "existingServices": "all prior containers still running; unchanged uptimes"
+  "existingServices": "all prior containers still running; unchanged uptimes",
+  "typographyVerifiedAt": "2026-10-05T10:33:22.593029+00:00",
+  "typography": {
+    "body": "16px",
+    "menu": "14px",
+    "source": "computed style in public browser"
+  },
+  "image": "radar-eleitoral:20261005-legibilidade",
+  "snapshotAfterTypography": {
+    "version": "20261005-primeira-coleta-8bc8e63f",
+    "base": "/data/snapshots/20261005-primeira-coleta-8bc8e63f",
+    "ufs": 27,
+    "municipalities": 5571,
+    "candidates": 18852,
+    "municipalRows": 5963334,
+    "validated": true,
+    "collectedAt": "2026-10-05T09:25:35.414814+00:00",
+    "builtAt": "2026-10-05T09:36:17.171217+00:00",
+    "partial": true,
+    "aggregationDivergences": 2
+  }
 }

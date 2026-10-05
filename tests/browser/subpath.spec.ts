@@ -34,6 +34,8 @@ test("evidencia visual publica desktop e mobile", async ({ page }) => {
   test.skip(!process.env.TEST_BASE_URL?.startsWith("https://"));
   await page.goto(root);
   await expect(page.getByRole("img", { name: "Mapa interativo dos 27 estados do Brasil" }).locator("a")).toHaveCount(27);
+  expect(await page.locator("body").evaluate(el => getComputedStyle(el).fontSize)).toBe("16px");
+  expect(await page.locator(".sidebar nav a").first().evaluate(el => getComputedStyle(el).fontSize)).toBe("14px");
   await page.screenshot({path:"docs/evidencias/publicado-home.jpg",fullPage:true});
   await page.setViewportSize({width:390,height:844});
   expect(await page.locator("body").evaluate(el => el.scrollWidth <= window.innerWidth)).toBe(true);

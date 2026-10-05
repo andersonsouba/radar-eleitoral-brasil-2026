@@ -25,7 +25,12 @@ Publicado e verificado em 05/10/2026. URL final: https://hubnio.com.br/dashpolit
 - Os containers anteriores permaneceram ativos, sem reinício. DNS, firewall e configuração global do proxy não foram alterados.
 - Evidências: `evidencias/publicacao-http-tls.json`, `publicado-home.jpg` e `publicado-mobile.jpg`.
 
-Código implantado: `bb76fa1`. Pacote privado: release `deploy-20261005`.
-SHA-256: `676942926547f1b7a1b950b6dcd4e55eb2293feed2d4e26d457de631632fecfb`.
+Código implantado após aumento das fontes: `7340503`. Pacote privado: release `legibilidade-20261005`.
+Versão anterior preservada na VPS: `20261005` / imagem `radar-eleitoral:20261005`.
+SHA-256: `f54630a8deaa29486b2baa942f02267221ca54c3dea0c0944f73191c08fca820`.
 
 O site oferece acesso público aos dados eleitorais oficiais; o código e o pacote de implantação permanecem no repositório privado. A base é a coleta de 05/10/2026 às 06:25 (Brasília), com pendências oficiais sinalizadas. Não há atualização automática.
+
+## Legibilidade publicada
+
+Fontes efetivamente verificadas no navegador público: corpo 16 px e menu 14 px. Container `radar-eleitoral:20261005-legibilidade` saudável e build/deploy com exit 0. Fluxo público e captura desktop/mobile reexecutados após a troca da versão.
