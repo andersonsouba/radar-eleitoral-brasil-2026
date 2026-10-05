@@ -1,0 +1,616 @@
+ATUALIZAÇÃO OBRIGATÓRIA DE ESCOPO — ESTA REGRA SUBSTITUI QUALQUER INSTRUÇÃO CONFLITANTE ABAIXO
+
+OBJETIVO MUNICIPAL:
+Para cada município, NÃO criar ranking, Top 5, Top 10 ou lista de vários deputados.
+
+Exibir SOMENTE:
+1) o único Deputado Estadual/Distrital OFICIALMENTE ELEITO que obteve mais votos naquele município;
+2) o único Deputado Federal OFICIALMENTE ELEITO que obteve mais votos naquele município.
+
+REGRA:
+- Primeiro identificar os candidatos oficialmente ELEITOS pelo TSE.
+- Depois filtrar a votação municipal somente para esses eleitos.
+- Por município + cargo, ordenar por votos decrescentes e selecionar SOMENTE o primeiro.
+- Candidato não eleito jamais pode aparecer como “deputado líder da cidade”, mesmo que tenha votação local superior.
+- Em empate real, não inventar desempate: sinalizar empate, salvo se existir critério oficial aplicável à métrica.
+- Não oferecer “Ver ranking completo” municipal.
+- Não mostrar segundo, terceiro, quarto ou quinto deputado na ficha da cidade.
+
+EXEMPLO:
+A = ELEITO = 5.000 votos
+B = NÃO ELEITO = 8.000 votos
+C = ELEITO = 4.000 votos
+Resultado municipal = A, e somente A.
+
+CAMINHO INVERSO:
+Na página de um deputado eleito, mostrar as cidades em que ELE é o nº 1 entre os eleitos do mesmo cargo. É permitido ranquear/ordenar CIDADES por votos do deputado.
+Na página de Estado, continua permitido ranquear os deputados ELEITOS por votação total estadual. A restrição de “somente 1” é especificamente para a análise POR MUNICÍPIO.
+
+PARTIDOS:
+Calcular também quantos municípios são liderados por um deputado eleito de cada partido, separando Estadual/Distrital e Federal.
+
+VALIDAÇÃO CRÍTICA:
+Cada município deve possuir no máximo 1 líder eleito por cargo (Estadual/Distrital e Federal), salvo empate explicitamente sinalizado.
+
+======================================================================
+
+PROJETO: RADAR ELEITORAL BRASIL 2026 — DASHBOARD EXECUTIVO TSE
+DATA-BASE: 05/10/2026
+
+MODELO RECOMENDADO: GPT-5.6 Sol
+NÍVEL DE RACIOCÍNIO: HIGH
+
+OBJETIVO
+Construir de ponta a ponta um dashboard web executivo das Eleições Gerais 2026 usando fontes oficiais da Justiça Eleitoral/TSE. O foco principal é Deputado Estadual/Distrital e Deputado Federal, especialmente a força territorial dos CANDIDATOS OFICIALMENTE ELEITOS em cada município.
+
+Execute diagnóstico, ingestão, ETL, validação, frontend, testes, Git e documentação sem pedir confirmação para etapas triviais.
+
+======================================================================
+1. REGRA CENTRAL
+======================================================================
+
+NUNCA confundir:
+- candidato mais votado no município;
+- candidato oficialmente eleito.
+
+Nos rankings estratégicos municipais de deputados:
+1. determinar primeiro quem está oficialmente ELEITO segundo o TSE;
+2. depois cruzar essa lista com a votação por município;
+3. só então ranquear os ELEITOS pela votação obtida naquela cidade.
+
+Exemplo:
+A = eleito, 5.000 votos na cidade
+B = não eleito, 8.000
+C = eleito, 4.000
+
+Ranking “Deputados eleitos mais votados na cidade”:
+1. A — 5.000
+2. C — 4.000
+
+B NÃO aparece.
+
+Nunca inferir eleição apenas por quantidade de votos. Respeitar o sistema proporcional e a situação oficial publicada pelo TSE.
+
+Presidente/Governador:
+- distinguir ELEITO;
+- 2º TURNO;
+- EM TOTALIZAÇÃO.
+Nunca apresentar parcial como definitivo.
+
+======================================================================
+2. FONTES
+======================================================================
+
+Usar prioritariamente:
+1. Portal Resultados/arquivos JSON oficiais de produção do TSE — Eleições 2026;
+2. Portal de Dados Abertos do TSE — candidaturas, resultados totalizados, votação nominal por município/zona e demais arquivos necessários;
+3. IBGE somente para cadastro/código/geometria de municípios e mapas, quando necessário.
+
+A documentação técnica do TSE para divulgação de resultados 2026 deve orientar descoberta de:
+- códigos das eleições;
+- configuração;
+- cargos;
+- Brasil;
+- UF;
+- município;
+- eleitos;
+- totalização.
+
+ATENÇÃO: documentação técnica pode mostrar URLs de SIMULADO. NÃO usar ambiente simulado no dashboard real. Descobrir e validar endpoints/arquivos oficiais de PRODUÇÃO de 2026.
+
+Não usar notícias, Wikipedia ou agregadores como fonte primária dos números.
+
+Registrar em docs/fontes.md:
+- URL/endpoints;
+- finalidade;
+- campos;
+- data/hora da coleta;
+- status da totalização.
+
+======================================================================
+3. COBERTURA
+======================================================================
+
+Cobrir:
+- Brasil;
+- 27 UFs;
+- todos os municípios presentes na base oficial;
+- Presidente;
+- Governador;
+- Senador;
+- Deputado Federal;
+- Deputado Estadual;
+- Deputado Distrital no DF.
+
+Não hardcodar quantidade histórica de municípios. Derivar da base carregada.
+
+======================================================================
+4. DADOS
+======================================================================
+
+Criar pipeline local:
+data/raw/
+data/processed/
+
+Preferir Parquet para processamento e JSON/agregados compactos para frontend.
+
+Entidades mínimas:
+
+DIM_MUNICIPIO:
+codigo_tse_municipio, codigo_ibge se reconciliável, municipio, uf, regiao.
+
+DIM_CANDIDATO:
+id/sequencial, numero, nome_urna, nome_completo, partido, sigla_partido,
+federacao/coligacao quando disponível, cargo, uf, situacao_candidatura,
+situacao_totalizacao, eleito_flag, turno.
+
+FATO_VOTACAO_MUNICIPIO:
+turno, uf, codigo_municipio, municipio, cargo, candidato, partido,
+votos_nominais, votos_validos_cargo_municipio, percentual_municipio.
+
+FATO_RESULTADO_UF:
+cargo, uf, candidato, partido, votos, percentual, classificacao,
+situacao, eleito_flag, segundo_turno_flag.
+
+FATO_PARTIDO:
+cargo, uf, municipio quando aplicável, partido, votos, eleitos, participacao.
+
+METADADOS_TOTALIZACAO:
+eleicao, turno, abrangencia, secoes_totalizadas, secoes_totais,
+percentual_totalizado, timestamp_fonte, timestamp_coleta.
+
+======================================================================
+5. CORAÇÃO DO PROJETO — DEPUTADOS × MUNICÍPIOS
+======================================================================
+
+Para cada UF:
+
+A. obter lista oficial de Deputados Estaduais/Distritais ELEITOS;
+B. obter lista oficial de Deputados Federais ELEITOS;
+C. obter votação municipal desses candidatos;
+D. gerar ranking em cada município APÓS filtrar somente os eleitos.
+
+Para cada município:
+
+RANK_ESTADUAIS_ELEITOS:
+posição, candidato, partido, votos no município, percentual local,
+votos totais na UF e posição estadual quando aplicável.
+
+RANK_FEDERAIS_ELEITOS:
+mesmos campos.
+
+Criar também visualização secundária “Todos os candidatos”, claramente separada,
+mas os destaques executivos devem usar ELEITOS.
+
+======================================================================
+6. CAMINHO INVERSO — ONDE O DEPUTADO É FORTE
+======================================================================
+
+Ao selecionar um deputado ELEITO, mostrar:
+- foto oficial se disponível/licenciável;
+- nome, número, partido, UF;
+- votos totais;
+- ranking estadual;
+- municípios em que recebeu votos;
+- municípios em que ficou nº 1 ENTRE OS ELEITOS do cargo;
+- Top 10 cidades por votos absolutos;
+- Top 10 por participação percentual;
+- mapa territorial;
+- tabela pesquisável com todos os municípios;
+- posição do deputado entre os eleitos em cada município;
+- concentração de votos Top 5 e Top 10.
+
+Não criar score subjetivo de “poder político”. Usar métricas objetivas.
+
+======================================================================
+7. TELA ESTADO — PRIORIDADE
+======================================================================
+
+Selecionou uma UF:
+
+BLOCO 1 — DEPUTADOS ESTADUAIS/DISTRITAIS ELEITOS
+ranking por votos totais na UF, nome, partido, votos e acesso ao detalhe territorial.
+
+BLOCO 2 — DEPUTADOS FEDERAIS ELEITOS
+mesma lógica.
+
+Clique no deputado abre:
+“ONDE ESTE DEPUTADO FOI MAIS VOTADO?”
+Top cidades + mapa + tabela.
+
+Permitir alternar:
+- votos absolutos;
+- percentual local;
+- liderança municipal entre eleitos.
+
+Também mostrar Governador e Senado da UF de forma compacta.
+
+======================================================================
+8. TELA MUNICÍPIO
+======================================================================
+
+Não listar milhares de cidades na tela.
+
+Usar:
+- filtro UF;
+- busca/autocomplete por município.
+
+Ao selecionar uma cidade, criar ficha eleitoral:
+
+CIDADE / UF
+
+Resumo:
+- Presidente mais votado localmente;
+- Governador mais votado;
+- Senadores mais votados;
+- partido mais votado por cargo quando conceitualmente aplicável;
+- comparecimento/abstenção se disponível.
+
+DESTAQUE PRINCIPAL:
+TOP 5 DEPUTADOS ESTADUAIS/DISTRITAIS ELEITOS MAIS VOTADOS NA CIDADE
+posição, nome, partido, votos, %.
+
+TOP 5 DEPUTADOS FEDERAIS ELEITOS MAIS VOTADOS NA CIDADE
+posição, nome, partido, votos, %.
+
+Botão “Ver ranking completo”.
+
+Destacar:
+“Deputado estadual/distrital eleito nº 1 nesta cidade”
+“Deputado federal eleito nº 1 nesta cidade”.
+
+======================================================================
+9. PRESIDENTE
+======================================================================
+
+Mostrar:
+- situação nacional;
+- 1º e 2º colocados;
+- votos e percentuais;
+- percentual totalizado;
+- ELEITO ou 2º TURNO;
+- mapa por UF;
+- ranking por UF;
+- resultado por município pesquisável.
+
+Se houver 2º turno, mostrar claramente a data oficial e os classificados.
+Não chamar ninguém de Presidente eleito sem confirmação oficial.
+
+======================================================================
+10. GOVERNADORES
+======================================================================
+
+Mapa do Brasil.
+
+Por UF:
+- eleito no 1º turno OU classificados ao 2º turno;
+- partido;
+- votos;
+- percentual;
+- totalização.
+
+Filtros:
+Eleito no 1º turno | 2º turno | Todos.
+
+Clique leva à análise da UF.
+
+======================================================================
+11. SENADO
+======================================================================
+
+Por UF:
+- eleitos conforme situação oficial;
+- ranking;
+- partido;
+- votos;
+- percentual;
+- votação municipal.
+
+Selecionar senador eleito → municípios onde teve mais votos.
+
+Obter quantidade de vagas e regras diretamente da fonte oficial de 2026.
+Não hardcodar lógica de eleições anteriores.
+
+======================================================================
+12. PARTIDOS
+======================================================================
+
+Separar REPRESENTAÇÃO de VOTAÇÃO.
+
+REPRESENTAÇÃO:
+- Deputados Estaduais/Distritais eleitos;
+- Deputados Federais eleitos;
+- Senadores eleitos;
+- Governadores eleitos no 1º turno;
+- classificados ao 2º turno.
+
+VOTAÇÃO, por cargo:
+- votos nominais;
+- legenda quando aplicável/disponível;
+- total segundo conceito oficial;
+- participação.
+
+TERRITÓRIO:
+selecionar partido e mostrar desempenho por UF/município,
+parlamentares eleitos e cidades onde candidatos eleitos do partido lideram.
+
+Nunca somar cargos diferentes num único “total de votos do partido” sem explicar.
+
+======================================================================
+13. SIDEBAR
+======================================================================
+
+1. Visão Geral
+2. Estados
+3. Municípios
+4. Deputados Estaduais
+5. Deputados Federais
+6. Senado
+7. Governadores
+8. Presidente
+9. Partidos
+10. Metodologia / Fonte
+
+Dar maior destaque a Estados, Municípios e Deputados.
+
+======================================================================
+14. HOME EXECUTIVA
+======================================================================
+
+Título:
+ELEIÇÕES 2026 — RADAR ELEITORAL BRASIL
+
+Subtítulo:
+Resultados oficiais da Justiça Eleitoral • 1º turno • atualização DD/MM/AAAA HH:MM
+
+Cards:
+- % totalizado;
+- Governadores definidos no 1º turno;
+- UFs com 2º turno;
+- Deputados Estaduais/Distritais eleitos;
+- Deputados Federais eleitos;
+- Senadores eleitos/definidos.
+
+Depois:
+- mapa Brasil;
+- situação presidencial;
+- resumo dos partidos;
+- botões “Analisar Estado” e “Analisar Município”.
+
+Poucos gráficos. Leitura em segundos.
+
+======================================================================
+15. UX/UI
+======================================================================
+
+Público: executivo não técnico.
+
+Regras:
+- extremamente simples;
+- números grandes;
+- português claro;
+- frases curtas;
+- tooltips;
+- Top 5/10 inicialmente;
+- “Ver todos”;
+- pesquisa rápida;
+- sidebar limpa;
+- excelente visual em notebook/projetor;
+- responsivo;
+- acessível.
+
+Badges:
+ELEITO
+2º TURNO
+EM TOTALIZAÇÃO
+NÃO ELEITO
+SUPLENTE, se necessário.
+
+Visual institucional e neutro.
+Não usar design que sugira preferência política.
+
+======================================================================
+16. STACK
+======================================================================
+
+Preferência:
+- Next.js + TypeScript;
+- Tailwind;
+- componentes acessíveis;
+- Recharts ou equivalente;
+- mapa vetorial leve;
+- Python para ETL;
+- dados pré-processados/cache local.
+
+MVP não deve exigir banco pago.
+
+Frontend NÃO deve fazer milhares de chamadas diretas ao TSE.
+
+======================================================================
+17. ATUALIZAÇÃO
+======================================================================
+
+Criar comando único, por exemplo:
+
+python scripts/update_eleicoes.py
+
+Fluxo:
+1. consultar fontes;
+2. baixar;
+3. validar schema;
+4. normalizar;
+5. identificar eleitos pela situação oficial;
+6. cruzar eleitos × votação municipal;
+7. gerar rankings;
+8. gerar agregados frontend;
+9. salvar timestamp/totalização;
+10. preservar cache anterior em falha;
+11. nunca substituir base válida por resposta vazia/corrompida.
+
+Logs claros.
+
+======================================================================
+18. VALIDAÇÕES OBRIGATÓRIAS
+======================================================================
+
+Validar:
+- 27 UFs;
+- quantidade de municípios contra fonte;
+- duplicidades;
+- candidatos sem UF/município;
+- votos negativos;
+- agregações quando comparáveis;
+- eleitos por cargo;
+- Presidente;
+- Governadores;
+- Senado;
+- Federais;
+- Estaduais/Distritais;
+- rankings municipais;
+- pelo menos 5 UFs e 10 municípios contra fonte oficial.
+
+TESTE CRÍTICO AUTOMATIZADO:
+um NÃO ELEITO com mais votos locais jamais pode entrar no ranking
+“eleitos mais votados no município”.
+
+Criar docs/validacao.md.
+
+======================================================================
+19. PERFORMANCE
+======================================================================
+
+Pré-calcular:
+- Top deputados eleitos por município;
+- Top municípios por deputado;
+- rankings UF;
+- rankings partidos;
+- agregados nacionais;
+- metadados.
+
+Lazy-load nas tabelas completas.
+
+Busca de município deve ser praticamente instantânea.
+
+======================================================================
+20. METODOLOGIA NO SITE
+======================================================================
+
+Exibir:
+
+“Os rankings municipais de deputados deste painel consideram apenas candidatos oficialmente classificados como eleitos pela Justiça Eleitoral. Por isso, o candidato com maior votação bruta em uma cidade pode não aparecer no ranking de ‘eleitos mais votados’ caso não tenha sido eleito.”
+
+Explicar de forma simples:
+- fonte TSE;
+- atualização;
+- votação x eleição;
+- sistema proporcional;
+- totalização;
+- 2º turno.
+
+Rodapé:
+“Fonte: Tribunal Superior Eleitoral (TSE). Painel independente para análise de dados públicos eleitorais. Resultados e situações eleitorais devem ser conferidos com a publicação oficial da Justiça Eleitoral.”
+
+======================================================================
+21. GIT
+======================================================================
+
+Criar Git local.
+
+Se GitHub estiver autenticado:
+- repositório PRIVADO;
+- branch main;
+- commit;
+- push.
+
+NÃO tornar público sem autorização.
+
+README:
+objetivo, stack, instalação, atualização, build, deploy, metodologia e fontes.
+
+======================================================================
+22. TESTES E CHECKPOINT
+======================================================================
+
+Executar:
+- lint;
+- typecheck;
+- build;
+- testes ETL;
+- testes das regras de ranking;
+- smoke tests das páginas.
+
+Não alterar silenciosamente regras para “fazer passar”.
+
+======================================================================
+23. ENTREGA FINAL
+======================================================================
+
+Responder:
+
+FASE: Radar Eleitoral Brasil 2026 — MVP
+STATUS: PASSOU / PASSOU COM RESSALVAS / BLOQUEADO
+
+FONTES
+- oficiais utilizadas
+- horário da coleta
+- estado da totalização
+
+BASE
+- UFs
+- municípios
+- candidatos
+- eleitos por cargo
+- registros municipais
+
+IMPLEMENTAÇÃO
+- páginas
+- rankings
+- filtros
+- mapas
+- atualização
+
+VALIDAÇÃO
+- testes executados
+- amostras conferidas
+- divergências
+
+GIT
+- repo
+- branch
+- commit
+- push
+- working tree
+
+EXECUÇÃO
+- comandos para atualizar
+- comandos para rodar local
+- URL local
+
+PENDÊNCIAS
+- listar somente pendências reais.
+
+======================================================================
+24. PRIORIDADE DE TEMPO
+======================================================================
+
+Se for necessário priorizar para uma apresentação executiva imediata:
+
+P0:
+1. ingestão TSE;
+2. eleitos oficiais;
+3. ranking Estadual/Distrital eleito por município;
+4. ranking Federal eleito por município;
+5. tela Estado;
+6. tela Município;
+7. Home;
+8. Presidente/Governador/2º turno;
+9. validação;
+10. build.
+
+P1:
+Senado detalhado, Partidos e mapas avançados.
+
+P2:
+refinamentos visuais e análises territoriais adicionais.
+
+Mesmo no modo rápido, NÃO sacrificar a regra central ELEITO × VOTAÇÃO MUNICIPAL.

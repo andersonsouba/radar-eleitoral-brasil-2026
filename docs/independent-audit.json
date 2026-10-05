@@ -1,0 +1,112 @@
+{
+  "result": "PASS",
+  "municipalities": 5571,
+  "municipalityOfficeChecks": 11142,
+  "states": 27,
+  "statuses": {
+    "unique": 7326,
+    "pending": 3812,
+    "tie": 4
+  },
+  "ties": [
+    {
+      "city": "MT-90093",
+      "office": 7,
+      "votes": 397,
+      "leaders": [
+        "110002542649",
+        "110002541763"
+      ]
+    },
+    {
+      "city": "PR-78638",
+      "office": 6,
+      "votes": 58,
+      "leaders": [
+        "160002536516",
+        "160002542287"
+      ]
+    },
+    {
+      "city": "RS-86665",
+      "office": 6,
+      "votes": 378,
+      "leaders": [
+        "210002541514",
+        "210002534668"
+      ]
+    },
+    {
+      "city": "RS-88650",
+      "office": 6,
+      "votes": 792,
+      "leaders": [
+        "210002541514",
+        "210002534584"
+      ]
+    }
+  ],
+  "nonElectedWithHigherVotes": 1526,
+  "contrastExamples": [
+    {
+      "city": "AC-01007",
+      "office": 7,
+      "leaderVotes": 462,
+      "nonElectedVotes": 809
+    },
+    {
+      "city": "AC-01023",
+      "office": 7,
+      "leaderVotes": 618,
+      "nonElectedVotes": 2249
+    },
+    {
+      "city": "AC-01040",
+      "office": 6,
+      "leaderVotes": 792,
+      "nonElectedVotes": 2389
+    },
+    {
+      "city": "AC-01040",
+      "office": 7,
+      "leaderVotes": 1824,
+      "nonElectedVotes": 1856
+    },
+    {
+      "city": "AC-01058",
+      "office": 6,
+      "leaderVotes": 1411,
+      "nonElectedVotes": 3010
+    },
+    {
+      "city": "AC-01066",
+      "office": 6,
+      "leaderVotes": 841,
+      "nonElectedVotes": 2728
+    },
+    {
+      "city": "AC-01074",
+      "office": 6,
+      "leaderVotes": 5384,
+      "nonElectedVotes": 6339
+    },
+    {
+      "city": "AC-01082",
+      "office": 6,
+      "leaderVotes": 1600,
+      "nonElectedVotes": 1957
+    },
+    {
+      "city": "AC-01090",
+      "office": 6,
+      "leaderVotes": 1232,
+      "nonElectedVotes": 3349
+    },
+    {
+      "city": "AC-01104",
+      "office": 6,
+      "leaderVotes": 605,
+      "nonElectedVotes": 992
+    }
+  ]
+}
