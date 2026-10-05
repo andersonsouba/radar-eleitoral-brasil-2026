@@ -1,0 +1,83 @@
+{
+  "verifiedAt": "2026-10-05T10:23:01.458272+00:00",
+  "url": "https://hubnio.com.br/dashpolitico",
+  "checks": [
+    {
+      "path": "",
+      "status": 200,
+      "bytes": 14974,
+      "sha256": "757ccf696c6507bfa2927ce2494774a77723c8183e82b7aae8fc34c1973b8ec7"
+    },
+    {
+      "path": "/estados/AC",
+      "status": 200,
+      "bytes": 14993,
+      "sha256": "47fa18a0362a2f7dc491ad83bfd467110f6625df6416e4fc341db0e7d96e3a84"
+    },
+    {
+      "path": "/municipios/AC-01007",
+      "status": 200,
+      "bytes": 15015,
+      "sha256": "72e04538157b8726d8764067f679d5f5cedf0a19089a92d68f7df871c0412f85"
+    },
+    {
+      "path": "/data/current.json",
+      "status": 200,
+      "bytes": 333,
+      "sha256": "f53277c7297992c869e6831e8ab3f7bf5fc254d4ebd00cb7f874c212166febbd",
+      "snapshot": {
+        "version": "20261005-primeira-coleta-8bc8e63f",
+        "base": "/data/snapshots/20261005-primeira-coleta-8bc8e63f",
+        "ufs": 27,
+        "municipalities": 5571,
+        "candidates": 18852,
+        "municipalRows": 5963334,
+        "validated": true,
+        "collectedAt": "2026-10-05T09:25:35.414814+00:00",
+        "builtAt": "2026-10-05T09:36:17.171217+00:00",
+        "partial": true,
+        "aggregationDivergences": 2
+      }
+    },
+    {
+      "path": "/maps/BR.json",
+      "status": 200,
+      "bytes": 60608,
+      "sha256": "c9f4aef0d6b3030a955b7d0e206b43b1663d4a52e73da10d34b0954f74d461ed"
+    }
+  ],
+  "tls": {
+    "version": "TLSv1.3",
+    "issuer": [
+      [
+        [
+          "countryName",
+          "US"
+        ]
+      ],
+      [
+        [
+          "organizationName",
+          "Let's Encrypt"
+        ]
+      ],
+      [
+        [
+          "commonName",
+          "YR1"
+        ]
+      ]
+    ],
+    "notBefore": "Oct  5 09:20:07 2026 GMT",
+    "notAfter": "Jan  3 09:20:06 2027 GMT",
+    "subjectAltName": [
+      [
+        "DNS",
+        "hubnio.com.br"
+      ]
+    ]
+  },
+  "container": "running healthy",
+  "deployExit": 0,
+  "existingServices": "all prior containers still running; unchanged uptimes"
+}

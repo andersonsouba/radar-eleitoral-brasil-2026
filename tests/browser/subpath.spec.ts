@@ -19,6 +19,23 @@ test("publicacao em subdiretorio preserva dados, mapas e navegacao", async ({ pa
   await page.locator(".leader-person a").first().click();
   await expect(page).toHaveURL(new RegExp(root + "/deputados/"));
   await expect(page.locator("h1")).toBeVisible();
+  const territory = page.getByRole("img", { name: /Mapa territorial de/ });
+  await expect(territory).toBeVisible();
+  const cityLink = territory.locator("a[href]").first();
+  await expect(cityLink).toHaveAttribute("href", new RegExp("^" + root + "/municipios/"));
+  await cityLink.click();
+  await expect(page.locator(".leader-card")).toHaveCount(2);
+  await page.reload();
+  await expect(page.locator(".leader-card")).toHaveCount(2);
   expect(failures).toEqual([]);
 });
 
+test("evidencia visual publica desktop e mobile", async ({ page }) => {
+  test.skip(!process.env.TEST_BASE_URL?.startsWith("https://"));
+  await page.goto(root);
+  await expect(page.getByRole("img", { name: "Mapa interativo dos 27 estados do Brasil" }).locator("a")).toHaveCount(27);
+  await page.screenshot({path:"docs/evidencias/publicado-home.jpg",fullPage:true});
+  await page.setViewportSize({width:390,height:844});
+  expect(await page.locator("body").evaluate(el => el.scrollWidth <= window.innerWidth)).toBe(true);
+  await page.screenshot({path:"docs/evidencias/publicado-mobile.jpg",fullPage:true});
+});

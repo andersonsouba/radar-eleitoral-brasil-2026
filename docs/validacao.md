@@ -76,7 +76,7 @@ Não há divergências nas somas de votos de deputados e senadores desta carga. 
 5. Situação de candidatura e fotos oficiais não foram enriquecidas; não são inferidas de campos com outro significado.
 6. Assinaturas JWS não são verificadas; transporte HTTPS e hashes locais foram usados e documentados.
 7. Alertas de desenvolvimento: `braces <=3.0.3`, advisory GHSA-vfj7-8cjw-p6xm, propagado por micromatch/fast-glob/plugin ESLint/ESLint config. A versão disponível no registry era 3.0.3 e o audit não oferecia correção. Não afeta o conjunto de dependências de produção auditado. Não se usou atualização forçada sem correção confirmada.
-8. Não há deploy publicado nem atualização agendada. O serviço entregue é local e o repositório é privado; as bases volumosas permanecem locais e podem ser reconstruídas.
+8. Dashboard publicado em https://hubnio.com.br/dashpolitico; HTTPS e fluxo público validados. Não há atualização agendada. O repositório e o pacote de implantação são privados; as bases brutas/Parquet permanecem locais e o snapshot de leitura acompanha o container. Veja `deploy.md`.
 
 ## Reprodução
 
@@ -91,3 +91,7 @@ npm run test:smoke
 ```
 
 O comando de atualização preserva o cache anterior em falha. Isso foi exercitado também no fluxo completo com configuração oficial incompleta, verificando ponteiro inalterado, erro registrado e liberação do lock.
+
+## Ajuste de legibilidade solicitado
+
+Texto base 14 → 16 px, menu 12 → 14 px, textos de apoio de 8–10 → 11–12 px e demais textos pequenos ampliados. Títulos grandes e estrutura de layout preservados. Build e lint PASS; 20 testes locais no subdiretório PASS, incluindo desktop, mobile e navegação pelos mapas. Uma captura exclusiva de HTTPS foi intencionalmente ignorada no servidor local; a captura pública tem execução separada. Evidência em `evidencias/smoke-legibilidade.json`. Sem alteração do ETL, dos dados ou das regras eleitorais.
