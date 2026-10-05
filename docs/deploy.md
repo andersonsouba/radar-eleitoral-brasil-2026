@@ -4,6 +4,17 @@ Destino: https://hubnio.com.br/dashpolitico
 
 Repositório privado: https://github.com/andersonsouba/radar-eleitoral-brasil-2026
 
+## Versão atual — atualização de dados
+
+Publicado em 05/10/2026 e verificado às 12h51 (Brasília). Snapshot `20261005T152605Z-0f9c851a`, coleta encerrada às 12h37: 513 federais, 1.035 estaduais e 24 distritais eleitos; nenhuma combinação UF/cargo legislativo pendente. Permanecem as limitações presidenciais descritas em `atualizacao-20261005.md`.
+
+- Release privada: `atualizacao-20261005`, código `9a0c720`.
+- Imagem saudável: `radar-eleitoral:20261005-atualizacao`; build/deploy exit 0.
+- Diretório na VPS: `/opt/radar-eleitoral/releases/20261005-atualizacao`.
+- SHA-256 do pacote: `17852610cad8b46ef1b0de2b0c6d49b13c035f11eca43c5ab3f10725ecb541a7`.
+- Rollback preservado: release/diretório `20261005-legibilidade`, imagem `radar-eleitoral:20261005-legibilidade`.
+- Seis testes públicos PASS. Ponteiro e resumo em HTTPS idênticos à base local auditada. Evidências: `evidencias/publicacao-atualizacao.json` e `evidencias/smoke-atualizacao-publico.json`.
+
 ## Procedimento
 
 Pacote privado com código, Dockerfile, mapas e snapshot oficial. Build Linux na VPS, container exclusivo `nio-dashpolitico`, sem porta pública própria, na rede existente `easypanel`. Traefik encaminha somente `/dashpolitico` e seus descendentes e solicita TLS pelo resolver existente `letsencrypt`.
@@ -12,7 +23,7 @@ O deploy não altera DNS, outros containers, banco de dados, firewall ou configu
 
 Atualização de dados: execute o ETL local, valide e empacote novamente o snapshot completo antes de reconstruir o container. Não há agendamento automático configurado.
 
-## Verificação
+## Histórico — primeira publicação e legibilidade
 
 Publicado e verificado em 05/10/2026. URL final: https://hubnio.com.br/dashpolitico
 
@@ -29,7 +40,7 @@ Código implantado após aumento das fontes: `7340503`. Pacote privado: release 
 Versão anterior preservada na VPS: `20261005` / imagem `radar-eleitoral:20261005`.
 SHA-256: `f54630a8deaa29486b2baa942f02267221ca54c3dea0c0944f73191c08fca820`.
 
-O site oferece acesso público aos dados eleitorais oficiais; o código e o pacote de implantação permanecem no repositório privado. A base é a coleta de 05/10/2026 às 06:25 (Brasília), com pendências oficiais sinalizadas. Não há atualização automática.
+O site oferece acesso público aos dados eleitorais oficiais; o código e o pacote de implantação permanecem no repositório privado. A primeira base era a coleta de 05/10/2026 às 06:25 (Brasília), substituída pela versão atual acima. Não há atualização automática.
 
 ## Legibilidade publicada
 

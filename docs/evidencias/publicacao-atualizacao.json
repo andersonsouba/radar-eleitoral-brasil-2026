@@ -1,0 +1,50 @@
+{
+  "verifiedAt": "2026-10-05T15:51:41.495139+00:00",
+  "url": "https://hubnio.com.br/dashpolitico",
+  "tlsCertificateValidation": true,
+  "snapshot": {
+    "version": "20261005T152605Z-0f9c851a",
+    "base": "/data/snapshots/20261005T152605Z-0f9c851a",
+    "ufs": 27,
+    "municipalities": 5571,
+    "candidates": 18852,
+    "municipalRows": 5963334,
+    "validated": true,
+    "collectedAt": "2026-10-05T15:37:53.074185+00:00",
+    "builtAt": "2026-10-05T15:41:07.086146+00:00",
+    "partial": true,
+    "aggregationDivergences": 1
+  },
+  "counts": {
+    "5": 54,
+    "6": 513,
+    "7": 1035,
+    "3": 20,
+    "8": 24
+  },
+  "pending": [],
+  "checks": [
+    {
+      "path": "/data/current.json",
+      "status": 200,
+      "matchesLocal": true,
+      "sha256": "a1f581c8b27c7d011aac063611e6e332c8370e3558d342f845927c743896e56d"
+    },
+    {
+      "path": "/data/snapshots/20261005T152605Z-0f9c851a/overview.json",
+      "status": 200,
+      "matchesLocal": true,
+      "sha256": "0303f0228ace5f5907355062c5f1ab02493b892fcc2b3e8d33cd8244c8c599fc"
+    }
+  ],
+  "publicBrowserTests": {
+    "passed": 6,
+    "failed": 0
+  },
+  "container": {
+    "image": "radar-eleitoral:20261005-atualizacao",
+    "health": "healthy",
+    "deployExit": 0
+  },
+  "independentAudit": "11,142 municipality-office checks PASS"
+}

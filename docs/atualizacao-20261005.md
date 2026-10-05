@@ -28,7 +28,7 @@ Permanecem 27 UFs, 5.571 municípios, 18.852 candidatos e 5.963.334 registros ca
 - Amostragem do ETL: 13 cidades em 5 UFs. Cadastro completo validado contra EA12.
 - Lint e TypeScript: PASS. Regras eleitorais, layout e fontes ampliadas preservados.
 - Navegador local: 5 testes PASS (quatro capitais antes pendentes e navegação por mapas). Captura exclusiva de HTTPS ignorada localmente e reservada à verificação pública.
-- Publicação: em andamento.
+- Publicação: PASS. Build/deploy Linux com exit 0 e container saudável. Seis testes no domínio público passaram, incluindo BA/MG/PR/SP, navegação por mapas e capturas desktop/mobile. Fontes de 16 px no corpo e 14 px no menu preservadas.
 
 Uma tentativa de testes locais encontrou o servidor local desligado e uma restrição no diretório temporário do navegador. O servidor foi iniciado e o cache de testes foi direcionado ao diretório de trabalho. Não houve alteração da aplicação para contornar essas falhas do ambiente de teste.
 
@@ -46,4 +46,4 @@ Imagem: `radar-eleitoral:20261005-atualizacao`.
 Destino: https://hubnio.com.br/dashpolitico
 Versão anterior preservada para rollback: `20261005-legibilidade`.
 
-Publicação pendente das verificações finais.
+Publicado e verificado em 05/10/2026 às 12h51 (Brasília). Ponteiro e resumo públicos correspondem byte a byte aos arquivos locais auditados, com HTTPS e validação de certificado habilitada. Evidências: `evidencias/publicacao-atualizacao.json`, `evidencias/smoke-atualizacao-publico.json`, `evidencias/publicado-home.jpg` e `evidencias/publicado-mobile.jpg`. Captura mobile usa viewport de navegador, sem alegação de teste em aparelho físico.
