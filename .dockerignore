@@ -1,0 +1,11 @@
+node_modules
+.next
+.git
+data
+.venv
+.env*
+work
+test-results
+playwright-report
+__pycache__
+*.log

@@ -1,0 +1,33 @@
+services:
+  dashpolitico:
+    image: radar-eleitoral:20261005
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_BASE_PATH: /dashpolitico
+    container_name: nio-dashpolitico
+    restart: unless-stopped
+    init: true
+    mem_limit: 768m
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    networks:
+      - easypanel
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: easypanel
+      traefik.http.routers.dashpolitico-http.rule: "Host(`hubnio.com.br`) && (Path(`/dashpolitico`) || PathPrefix(`/dashpolitico/`))"
+      traefik.http.routers.dashpolitico-http.entrypoints: http
+      traefik.http.routers.dashpolitico-http.middlewares: redirect-to-https@file
+      traefik.http.routers.dashpolitico-http.service: dashpolitico
+      traefik.http.routers.dashpolitico-https.rule: "Host(`hubnio.com.br`) && (Path(`/dashpolitico`) || PathPrefix(`/dashpolitico/`))"
+      traefik.http.routers.dashpolitico-https.entrypoints: https
+      traefik.http.routers.dashpolitico-https.tls: "true"
+      traefik.http.routers.dashpolitico-https.tls.certresolver: letsencrypt
+      traefik.http.routers.dashpolitico-https.service: dashpolitico
+      traefik.http.services.dashpolitico.loadbalancer.server.port: "3000"
+networks:
+  easypanel:
+    external: true

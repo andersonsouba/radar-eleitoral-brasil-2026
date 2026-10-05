@@ -11,7 +11,7 @@ import {
   ArrowRight,
   ExternalLink,
 } from "lucide-react";
-import { useResource, fmt, pct, date, fold } from "@/lib/data";
+import { publicPath, useResource, fmt, pct, date, fold } from "@/lib/data";
 import type {
   Candidate,
   MapData,
@@ -394,7 +394,7 @@ export function BrazilMap({
           return (
             <a
               key={p.id}
-              href={"/estados/" + p.uf}
+              href={publicPath("/estados/" + p.uf)}
               aria-label={"Analisar " + p.name}
               onFocus={() => setHover(p.uf ?? "")}
               onMouseEnter={() => setHover(p.uf ?? "")}

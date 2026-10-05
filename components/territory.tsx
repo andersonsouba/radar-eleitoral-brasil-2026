@@ -8,7 +8,7 @@ import {
   Check,
   ArrowRight,
 } from "lucide-react";
-import { useResource, fmt, pct, officeName, fold } from "@/lib/data";
+import { publicPath, useResource, fmt, pct, officeName, fold } from "@/lib/data";
 import type {
   Candidate,
   City,
@@ -526,7 +526,7 @@ function TerritoryMap({
           return (
             <a
               key={p.id}
-              href={c ? "/municipios/" + c.id : undefined}
+              href={c ? publicPath("/municipios/" + c.id) : undefined}
               aria-label={c?.name ?? "Área sem correspondência eleitoral"}
               onMouseEnter={() =>
                 setHover(

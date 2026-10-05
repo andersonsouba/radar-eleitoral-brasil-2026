@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+export const publicPath = (path: string) => (process.env.NEXT_PUBLIC_BASE_PATH ?? "") + path;
 export const fmt = (n: number | null | undefined) =>
   n == null ? "—" : new Intl.NumberFormat("pt-BR").format(n);
 export const pct = (n: number | null | undefined) =>
@@ -38,7 +39,7 @@ export function useResource<T>(path: string | null) {
   useEffect(() => {
     if (!path) return;
     const controller = new AbortController();
-    fetch(path, {
+    fetch(publicPath(path), {
       signal: controller.signal,
       cache: path.includes("/snapshots/") ? "force-cache" : "no-store",
     })

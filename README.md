@@ -108,7 +108,26 @@ Os testes de navegador usam a base real local. Casos sintéticos existem apenas 
 
 ## Deploy
 
-Nenhum site foi publicado. Para um futuro deploy, use hospedagem Node compatível, faça a atualização em ambiente de processamento e distribua o snapshot completo juntamente com o build, ou em storage estático acessível à aplicação. Preserve o caminho `/data`, publique o ponteiro por último e restrinja acesso conforme a audiência. Não exponha scripts de atualização como endpoint público. `next build` não inclui automaticamente os caches ignorados pelo Git num clone.
+Destino solicitado: `https://hubnio.com.br/dashpolitico`. A configuração de produção usa a VPS existente, Docker e a rede `easypanel`, com uma rota Traefik limitada a esse caminho e certificado Let's Encrypt. Outros domínios e rotas são preservados. O repositório é privado.
+
+```sh
+docker compose -p radar-eleitoral -f compose.production.yml up -d --build
+```
+
+O pacote de implantação deve conter `public/data/current.json`, `attempt.json` e o snapshot completo referenciado. O Dockerfile interrompe o build se o ponteiro estiver ausente. Esses arquivos seguem fora do Git; acompanham o pacote privado de implantação. O ETL continua local e não é exposto como endpoint web.
+
+O caminho é definido durante o build por `NEXT_PUBLIC_BASE_PATH=/dashpolitico`. Sem essa variável, o desenvolvimento local continua na raiz. Para validar o subdiretório em PowerShell:
+
+```powershell
+$env:NEXT_PUBLIC_BASE_PATH='/dashpolitico'
+npm run build
+npm run start -- --port 3016
+# Em outro terminal:
+$env:TEST_SUBPATH='/dashpolitico'
+npm run test:smoke -- tests/browser/subpath.spec.ts
+```
+
+O estado efetivo de publicação e as verificações externas ficam em `docs/deploy.md`.
 
 ## Limites de interpretação
 
