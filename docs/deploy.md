@@ -4,7 +4,20 @@ Destino: https://hubnio.com.br/dashpolitico
 
 Repositório privado: https://github.com/andersonsouba/radar-eleitoral-brasil-2026
 
-## Versão atual — atualização de dados
+## Versão atual — consultas territoriais de 09/10/2026
+
+Publicado e verificado no domínio: duas consultas para estaduais/distritais e federais, “Onde liderou” e “Onde recebeu votos”. Detalhes em `visoes-territoriais-20261009.md`.
+
+- Código: `f8be17d`; release privada `visoes-20261009`.
+- Imagem saudável: `radar-eleitoral:20261009-visoes`.
+- Diretório: `/opt/radar-eleitoral/releases/20261009-visoes`.
+- SHA-256: `5dde5bc7a0c8604e75574a26db744d28850d9a94e625e0f816ead0443c343a2a`.
+- Mesma base `20261005T152605Z-0f9c851a`, coleta de 05/10 às 12h37. Não houve nova coleta.
+- Lint, TypeScript e build PASS; regressão local 27 PASS/2 não aplicáveis; domínio público 6 PASS.
+- Rollback preservado: `/opt/radar-eleitoral/releases/20261005-atualizacao` e imagem `radar-eleitoral:20261005-atualizacao`.
+- Evidências: `evidencias/visoes-publicacao.json`, `evidencias/visoes-publico.json` e capturas `evidencias/visoes-desktop.png`/`evidencias/visoes-mobile.png`.
+
+## Histórico — atualização de dados de 05/10/2026
 
 Publicado em 05/10/2026 e verificado às 12h51 (Brasília). Snapshot `20261005T152605Z-0f9c851a`, coleta encerrada às 12h37: 513 federais, 1.035 estaduais e 24 distritais eleitos; nenhuma combinação UF/cargo legislativo pendente. Permanecem as limitações presidenciais descritas em `atualizacao-20261005.md`.
 

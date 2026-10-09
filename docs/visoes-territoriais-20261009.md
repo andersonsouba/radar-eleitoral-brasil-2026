@@ -20,8 +20,8 @@ A inspeção com dados carregados identificou transbordamento na ficha mobile: a
 
 Lint, TypeScript e build de produção passaram. Regressão final: 27 testes PASS, 2 ignorados (ausência de municípios pendentes nesta base e captura exclusiva de HTTPS). Evidência: `evidencias/visoes-local.json`. Capturas da ficha carregada: `evidencias/visoes-desktop.png` e `evidencias/visoes-mobile.png`.
 
-Pacote de implantação SHA-256: `5dde5bc7a0c8604e75574a26db744d28850d9a94e625e0f816ead0443c343a2a`. Publicação aguardando verificação no domínio.
+Pacote de implantação SHA-256: `5dde5bc7a0c8604e75574a26db744d28850d9a94e625e0f816ead0443c343a2a`. Publicação concluída e verificada em 09/10/2026 às 15h51–15h53 (Brasília). Os seis testes públicos passaram, sem ignorados. Evidências: `evidencias/visoes-publico.json` e `evidencias/visoes-publicacao.json`. O ponteiro e duas fichas de referência servidos por HTTPS correspondem byte a byte à base local. Imagem nova saudável; release privada `visoes-20261009`, código `f8be17d`.
 
 ## Implantação
 
-Imagem preparada: `radar-eleitoral:20261009-visoes`. Destino: https://hubnio.com.br/dashpolitico. Versão anterior preservada: `/opt/radar-eleitoral/releases/20261005-atualizacao`, imagem `radar-eleitoral:20261005-atualizacao`.
+Imagem publicada: `radar-eleitoral:20261009-visoes`. Destino: https://hubnio.com.br/dashpolitico. Versão anterior preservada: `/opt/radar-eleitoral/releases/20261005-atualizacao`, imagem `radar-eleitoral:20261005-atualizacao`.
