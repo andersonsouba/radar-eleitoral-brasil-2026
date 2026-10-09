@@ -166,6 +166,7 @@ export type Overview = {
   governorsSecondRound: number;
 };
 export type Snapshot = {
+  municipalVotes?: boolean;
   version: string;
   base: string;
   ufs: number;
@@ -177,6 +178,9 @@ export type Snapshot = {
   builtAt: string;
   partial: boolean;
   aggregationDivergences: number;
+};
+export type MunicipalVotes = Municipality & {
+  results: Record<string, { candidates: Candidate[]; meta: Meta; officialMeta: Meta }>;
 };
 export type PartyTerritory = {
   party: string;

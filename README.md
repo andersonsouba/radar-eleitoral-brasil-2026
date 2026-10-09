@@ -4,9 +4,9 @@ Dashboard executivo local das eleições gerais de 2026, em português, com dado
 
 ## Regra principal
 
-A ficha municipal apresenta **somente o deputado estadual/distrital e o deputado federal oficialmente eleitos com mais votos na cidade**. Primeiro identifica os eleitos no arquivo estadual, depois cruza sua votação municipal. Não eleitos jamais entram como líderes. Empates reais são explícitos, sem desempate inventado; votação zero não gera liderança. Não existe ranking completo municipal de deputados.
+A ficha municipal apresenta **somente o deputado estadual/distrital e o deputado federal oficialmente eleitos com mais votos na cidade**. Primeiro identifica os eleitos no arquivo estadual, depois cruza sua votação municipal. Não eleitos jamais entram como líderes. Empates reais são explícitos, sem desempate inventado; votação zero não gera liderança. A consulta específica **Cidades**, dentro de Deputados Estaduais/Distritais e Federais, apresenta todos os candidatos com votação positiva no cargo, inclusive não eleitos. A ficha geral de Municípios mantém os destaques de líderes eleitos.
 
-A lista estadual pode ordenar todos os eleitos por votos. Cada entrada da sidebar (Estaduais/Distritais e Federais) oferece duas consultas: **Onde liderou** e **Onde recebeu votos**. A segunda inclui todas as cidades com votação nominal positiva, mesmo sem liderança, e exclui cidades com zero votos. A escolha acompanha o link até a ficha (`/deputados/:id/votos`); links antigos abrem em liderança. Na ficha, as cidades podem ser ordenadas por votos ou percentual local. Empates de ordenação usam votos e nome para estabilidade, sem alterar as posições eleitorais oficiais. Candidatos ao Senado têm detalhe municipal próprio, sem a métrica de liderança reservada a deputados.
+A lista estadual ordena os eleitos por votos. Cada entrada da sidebar (Estaduais/Distritais e Federais) oferece **Deputados** e **Cidades**. Na primeira, escolha um eleito para ver todas as cidades onde recebeu votos, com lideranças e empates identificados. O filtro “Somente cidades onde liderou” usa `/deputados/:id/liderancas`; a consulta completa usa `/deputados/:id/votos` e é também o padrão dos links antigos. Na segunda, escolha uma cidade para ver todos os candidatos com votação positiva, suas situações oficiais, votos e percentuais locais. Os filtros de nome/partido/número e situação mantêm a posição original no ranking; empates recebem a mesma posição. O cargo distrital substitui o estadual no DF. Senado permanece com seu detalhe próprio.
 
 ## Stack
 
@@ -136,3 +136,7 @@ O estado efetivo de publicação e as verificações externas ficam em `docs/dep
 Votos de partidos são válidos nominais + legenda válida no mesmo cargo; votos computados dos candidatos e percentuais oficiais possuem conceitos documentados em `docs/fontes.md`. A concentração é suspensa se o total das cidades divergir do estadual. Empates partidários não são somados às lideranças exclusivas.
 
 Fonte: Tribunal Superior Eleitoral (TSE). Painel independente para análise de dados públicos eleitorais. Resultados e situações eleitorais devem ser conferidos com a publicação oficial da Justiça Eleitoral.
+
+## Revisão local: Deputados e Cidades (09/10/2026)
+
+Revisão aprovada pelo usuário para envio ao Git e publicação em 09/10/2026. Guia e evidências: `docs/consulta-cidades.md`; estado da implantação: `docs/deploy.md`. A geração usa a coleta arquivada de 05/10, sem consulta nova ao TSE.

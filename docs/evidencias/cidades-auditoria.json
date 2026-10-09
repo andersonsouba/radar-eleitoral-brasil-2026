@@ -1,0 +1,16 @@
+{
+  "snapshot": "20261005T152605Z-0f9c851a-cidades-7a9853d3",
+  "sourceSnapshot": "20261005T152605Z-0f9c851a",
+  "result": "PASS",
+  "checks": [
+    "27 UFs; 5571 cidades",
+    "Votos positivos idênticos aos Parquets arquivados",
+    "Nenhum candidato positivo omitido ou duplicado",
+    "Situação oficial e votos na UF preservados",
+    "Ordem, empates e percentuais locais reconciliados"
+  ],
+  "cities": 5571,
+  "positiveRows": 1797486,
+  "nonElectedRows": 1400297,
+  "tiedRows": 1253872
+}

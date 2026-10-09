@@ -229,14 +229,15 @@ function Route({
           snapshot={snapshot}
           overview={overview}
           offices={[7, 8]}
+          cities={id === "cidades"} cityId={territoryView}
         />
       );
     case "deputados-federais":
       return (
-        <DeputiesPage snapshot={snapshot} overview={overview} offices={[6]} />
+        <DeputiesPage snapshot={snapshot} overview={overview} offices={[6]} cities={id === "cidades"} cityId={territoryView} />
       );
     case "deputados":
-      return <DeputyPage snapshot={snapshot} id={id ?? ""} view={territoryView === "votos" ? "votes" : "leaders"} />;
+      return <DeputyPage snapshot={snapshot} id={id ?? ""} view={territoryView === "liderancas" ? "leaders" : "votes"} />;
     case "senado":
       return (
         <DeputiesPage snapshot={snapshot} overview={overview} offices={[5]} />

@@ -69,10 +69,10 @@ export function Methodology({
               </strong>
             </div>
           </Panel>
-          <Panel title="Duas consultas por deputado">
-            <p><strong>Onde liderou:</strong> cidades onde o deputado teve a maior votação entre os oficialmente eleitos do mesmo cargo, incluindo empates reais.</p>
-            <p><strong>Onde recebeu votos:</strong> todas as cidades com votação nominal positiva para o deputado, independentemente de sua posição local. Cidades com zero votos ficam fora dessa consulta.</p>
-            <p>As duas visões estão nas entradas Deputados Estaduais (inclui Distritais) e Deputados Federais. Na ficha, ordene as cidades por votos absolutos ou percentual local. A coluna “Entre eleitos” informa a posição do deputado na cidade; não representa seu ranking na UF.</p>
+          <Panel title="Consultas por deputado e por cidade">
+            <p><strong>Deputados:</strong> escolha um eleito para ver todas as cidades com votação nominal positiva. O filtro “Somente cidades onde liderou” restringe a consulta às lideranças entre eleitos do mesmo cargo, incluindo empates reais.</p>
+            <p><strong>Cidades:</strong> escolha o município para consultar todos os candidatos votados no cargo, incluindo não eleitos. O ranking usa votos locais, preserva empates e exclui votação zero. A situação eleitoral é a oficial da UF. Os filtros não alteram a posição original.</p>
+            <p>As duas visões estão nas entradas Deputados Estaduais (inclui Distritais) e Deputados Federais. Na ficha do deputado, ordene as cidades por votos absolutos ou percentual local. A coluna “Entre eleitos” informa sua posição entre eleitos na cidade. Na consulta Cidades, a posição considera todos os votados no cargo. O percentual local usa os votos válidos do cargo no município.</p>
           </Panel>
           <Panel title="Votação não é eleição">
             <p>

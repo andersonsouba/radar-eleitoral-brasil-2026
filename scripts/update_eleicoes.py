@@ -11,6 +11,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 from collect import Collector, catalog, discover, download, now, result, write_json
 from electoral import iter_candidates, metadata, municipal_leaders, normalize_result, number, decimal
+from city_votes import municipal_candidates
 
 ROOT = Path(__file__).resolve().parents[1]
 REGIONS = {'1': 'Norte', '2': 'Nordeste', '3': 'Sudeste', '4': 'Sul', '5': 'Centro-Oeste'}
@@ -79,6 +80,7 @@ def build(collector, settings, states, catalog_source, version):
                  'name': mun['nm'], 'uf': uf.upper(), 'region': REGIONS.get(str(mun.get('cdi', ''))[:1]), 'capital': mun['c'] == 's'}
             municipalities.append(m)
             city = {**m, 'leaders': {}, 'results': {}, 'partyLeaders': {}}
+            municipal_results = {}
             for office in offices:
                 raw, source = result(collector, settings, uf, office, mun['cd']); manifest.append(source)
                 received_dates.append(source['collectedAt'])
@@ -106,6 +108,9 @@ def build(collector, settings, states, catalog_source, version):
                 max_party = max(p['votes'] for p in local_parties)
                 city['partyLeaders'][str(office)] = [p for p in local_parties if p['votes'] == max_party and max_party > 0]
                 if office in (6, 7, 8):
+                    municipal_results[str(office)] = {
+                        'candidates': municipal_candidates(parent['candidates'], local_votes, meta['validVotes']),
+                        'meta': meta, 'officialMeta': parent['meta']}
                     leadership = municipal_leaders(parent['candidates'], local_votes)
                     leadership['meta'] = meta
                     leadership['officialMeta'] = parent['meta']
@@ -156,6 +161,7 @@ def build(collector, settings, states, catalog_source, version):
                                    'expected': expected, 'actual': actual, 'votes': top, 'url': source['url'],
                                    'stateUrl': parent['meta']['url'], 'status': 'PASS', 'sha256': source['sha256']})
             write_json(dest / 'municipalities' / (m['id'] + '.json'), city)
+            write_json(dest / 'municipal-votes' / (m['id'] + '.json'), {**m, 'results': municipal_results})
         writer.close(); total_rows += writer.count
         for office in offices:
             diffs = [{'id': c['id'], 'ufVotes': c['votes'], 'municipalSum': aggregates[office][c['id']]} for c in state_results[str(office)]['candidates'] if c['votes'] != aggregates[office][c['id']]]
@@ -236,7 +242,7 @@ def build(collector, settings, states, catalog_source, version):
                        ('FATO_PARTIDO', party_facts), ('METADADOS_TOTALIZACAO', metadata_facts)]:
         pq.write_table(pa.Table.from_pylist(rows), processed / (name + '.parquet'), compression='zstd')
     summary = {'ufs': len(states), 'municipalities': len(municipalities), 'candidates': len(candidate_dims),
-               'municipalRows': total_rows, 'validated': True, 'collectedAt': max(received_dates), 'builtAt': overview['builtAt'],
+               'municipalRows': total_rows, 'municipalVotes': True, 'validated': True, 'collectedAt': max(received_dates), 'builtAt': overview['builtAt'],
                'partial': bool(pending) or not president['meta']['final'], 'aggregationDivergences': len(divergences)}
     promote(ROOT / 'public/data', dest, summary)
     print(json.dumps(summary, ensure_ascii=True), flush=True)

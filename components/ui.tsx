@@ -267,11 +267,13 @@ export function CandidateTable({
   local = false,
   limit = 10,
   detailSuffix = "",
+  preserveRank = false,
 }: {
   candidates: Candidate[];
   local?: boolean;
   limit?: number;
   detailSuffix?: "/votos" | "";
+  preserveRank?: boolean;
 }) {
   const [visible, setVisible] = useState(limit);
   return candidates.length ? (
@@ -284,7 +286,7 @@ export function CandidateTable({
               <th>Candidato</th>
               <th>Partido</th>
               <th className="numeric">Votos</th>
-              <th className="numeric">%</th>
+              <th className="numeric">{preserveRank ? "% local" : "%"}</th>
               <th>Situação</th>
             </tr>
           </thead>
@@ -292,7 +294,7 @@ export function CandidateTable({
             {candidates.slice(0, visible).map((c, i) => (
               <tr key={c.id}>
                 <td className="rank">
-                  {local
+                  {preserveRank ? c.rank : local
                     ? i + 1
                     : candidates.findIndex((x) => x.votes === c.votes) + 1}
                 </td>

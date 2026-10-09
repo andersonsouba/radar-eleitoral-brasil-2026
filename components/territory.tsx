@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { TerritoryViews, type TerritoryView } from "./territory-views";
+import { CityVotesBrowser } from "./city-votes";
 import {
   MapPin,
   ShieldCheck,
@@ -235,17 +236,21 @@ export function DeputiesPage({
   snapshot,
   overview,
   offices,
+  cities = false,
+  cityId,
 }: {
   snapshot: Snapshot;
   overview: Overview;
   offices: number[];
+  cities?: boolean;
+  cityId?: string;
 }) {
   const { data, error } = useResource<Candidate[]>(
-    snapshot.base + "/candidates.json",
+    cities ? null : snapshot.base + "/candidates.json",
   );
   const [uf, setUF] = useState("");
   const [query, setQuery] = useState("");
-  const [view, setView] = useState<TerritoryView>("leaders");
+  const baseHref = offices[0] === 6 ? "/deputados-federais" : "/deputados-estaduais";
   const filtered = (data ?? [])
     .filter(
       (c) =>
@@ -254,6 +259,7 @@ export function DeputiesPage({
         fold(c.name + " " + c.party).includes(fold(query)),
     )
     .sort((a, b) => b.votes - a.votes);
+  if (cities) return <CityVotesBrowser snapshot={snapshot} overview={overview} offices={offices} baseHref={baseHref} cityId={cityId} />;
   return (
     <>
       <Title
@@ -269,7 +275,7 @@ export function DeputiesPage({
           ? "Selecione um eleito para abrir seu mapa territorial e a distribuição municipal de votos."
           : "Escolha a consulta e selecione um deputado eleito para explorar suas cidades no mapa e na tabela."}
       />
-      {offices[0] !== 5 ? <TerritoryViews value={view} onChange={setView} /> : null}
+      {offices[0] !== 5 ? <TerritoryViews baseHref={baseHref} /> : null}
       <Panel>
         <div className="filters">
           <StateSelect states={overview.states} value={uf} onChange={setUF} />
@@ -288,7 +294,7 @@ export function DeputiesPage({
               {fmt(filtered.length)} eleitos nesta seleção · ordenados por votos
               totais
             </div>
-            <CandidateTable key={uf + query} candidates={filtered} detailSuffix={offices[0] !== 5 && view === "votes" ? "/votos" : ""} />
+            <CandidateTable key={uf + query} candidates={filtered} detailSuffix={offices[0] !== 5 ? "/votos" : ""} />
           </>
         )}
       </Panel>
@@ -304,13 +310,14 @@ export function DeputiesPage({
 export function DeputyPage({
   snapshot,
   id,
-  view = "leaders",
+  view = "votes",
 }: {
   snapshot: Snapshot;
   id: string;
   view?: TerritoryView;
 }) {
   const router = useRouter();
+  const [selectedView, setSelectedView] = useState<TerritoryView>(view);
   const { data: d, error } = useResource<CandidateDetail>(
     snapshot.base + "/candidates/" + encodeURIComponent(id) + ".json",
   );
@@ -320,7 +327,7 @@ export function DeputyPage({
   if (!d) return <Loading error={error} />;
   const c = d.candidate;
   const isDeputy = c.office !== 5;
-  const activeView = isDeputy ? view : "votes";
+  const activeView = isDeputy ? selectedView : "votes";
   const activeMode = activeView === "leaders" ? "leaders" : sort;
   const rows = d.cities
     .filter(
@@ -387,13 +394,13 @@ export function DeputyPage({
         }
       >
         {isDeputy ? (
-          <TerritoryViews
-            value={activeView}
-            counts={{leaders: d.leaderCount + d.tiedCount, votes: d.receivedCount}}
-            onChange={(next) => {
-              if (next !== activeView) router.push("/deputados/" + encodeURIComponent(id) + (next === "votes" ? "/votos" : ""), {scroll: false});
-            }}
-          />
+          <label className="leadership-filter">
+            <input type="checkbox" checked={activeView === "leaders"} onChange={(e) => {
+              setSelectedView(e.target.checked ? "leaders" : "votes");
+              router.push("/deputados/" + encodeURIComponent(id) + (e.target.checked ? "/liderancas" : "/votos"), {scroll: false});
+            }} />
+            Somente cidades onde liderou
+          </label>
         ) : null}
         <div className="filters territory-filters">
           <SearchField
@@ -447,7 +454,7 @@ export function DeputyPage({
                           <td>
                             <Link
                               className="name-link"
-                              href={"/municipios/" + m.id}
+                              href={isDeputy ? (c.office === 6 ? "/deputados-federais" : "/deputados-estaduais") + "/cidades/" + m.id : "/municipios/" + m.id}
                             >
                               {m.name}
                               <ArrowUpRight size={12} />
@@ -461,7 +468,7 @@ export function DeputyPage({
                                 ? "Sem votos"
                                 : m.tie
                                   ? "1º · Empate"
-                                  : m.rank == null ? "—" : `${m.rank}º`}
+                                  : m.leader ? "1º · Liderou" : m.rank == null ? "—" : `${m.rank}º`}
                             </td>
                           ) : null}
                         </tr>

@@ -104,11 +104,8 @@ test("estado abre deputado e cidades lideres", async ({ page }) => {
   await page.goto(root + "/deputados/" + candidate.id);
   await expect(page.locator("h1")).toHaveText(candidate.name);
   await expect(
-    page.getByRole("button", { name: "Onde liderou", exact: true }),
-  ).toHaveAttribute("aria-pressed", "true");
-  await page
-    .getByRole("button", { name: "Onde recebeu votos", exact: true })
-    .click();
+    page.getByRole("checkbox", { name: "Somente cidades onde liderou", exact: true }),
+  ).not.toBeChecked();
   await expect(page.locator("tbody tr").first()).toBeVisible();
   await page
     .getByRole("combobox", { name: "Ordenar cidades", exact: true })

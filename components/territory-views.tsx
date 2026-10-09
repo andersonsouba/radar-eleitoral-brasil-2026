@@ -1,39 +1,35 @@
-import { MapPin, ShieldCheck } from "lucide-react";
-import { fmt } from "@/lib/data";
+import Link from "next/link";
+import { MapPin, Users } from "lucide-react";
 
 export type TerritoryView = "leaders" | "votes";
 
 export function TerritoryViews({
-  value,
-  onChange,
-  counts,
+  baseHref,
+  cities = false,
 }: {
-  value: TerritoryView;
-  onChange: (view: TerritoryView) => void;
-  counts?: { leaders: number; votes: number };
+  baseHref: string;
+  cities?: boolean;
 }) {
   return (
     <div className="territory-views" role="group" aria-label="Tipo de consulta territorial">
       {([
-        { key: "leaders", label: "Onde liderou", description: "Cidades onde foi o mais votado entre os eleitos do cargo, incluindo empates.", Icon: ShieldCheck },
-        { key: "votes", label: "Onde recebeu votos", description: "Todas as cidades com pelo menos um voto, mesmo sem liderança.", Icon: MapPin },
+        { key: "deputies", label: "Deputados", description: "Escolha um eleito e veja todas as cidades onde recebeu votos, com suas lideranças.", Icon: Users },
+        { key: "cities", label: "Cidades", description: "Escolha uma cidade e veja todos os candidatos votados, eleitos e não eleitos.", Icon: MapPin },
       ] as const).map(({ key, label, description, Icon }) => (
-        <button
+        <Link
           key={key}
-          type="button"
-          className={"territory-view " + (value === key ? "selected" : "")}
+          href={baseHref + (key === "cities" ? "/cidades" : "")}
+          className={"territory-view " + (cities === (key === "cities") ? "selected" : "")}
           aria-label={label}
           aria-describedby={`territory-description-${key}`}
-          aria-pressed={value === key}
-          onClick={() => onChange(key)}
+          aria-current={cities === (key === "cities") ? "page" : undefined}
         >
           <Icon size={21} aria-hidden="true" />
           <span>
             <strong>{label}</strong>
             <span id={`territory-description-${key}`}>{description}</span>
           </span>
-          {counts ? <b className="territory-view-count">{fmt(counts[key])}<small>cidades</small></b> : null}
-        </button>
+        </Link>
       ))}
     </div>
   );

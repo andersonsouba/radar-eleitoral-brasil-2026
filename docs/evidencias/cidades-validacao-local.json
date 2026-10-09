@@ -1,0 +1,33 @@
+{
+  "status": "PASS_AUTOMATIZADO_LOCAL",
+  "build": "PASS",
+  "typescript": "PASS",
+  "eslint": "PASS",
+  "python": {
+    "passed": 20
+  },
+  "browser": {
+    "applicablePassedAcrossRuns": 28,
+    "skipped": 2,
+    "initialRun": {
+      "passed": 27,
+      "failed": 1,
+      "reason": "Teste móvel verificava coluna fora da tela vertical; faltava rolar até a tabela."
+    },
+    "focusedRetest": {
+      "passed": 1,
+      "failed": 0
+    },
+    "skippedReasons": [
+      "Snapshot sem município com ambos os cargos pendentes",
+      "Teste exclusivo de produção HTTPS: publicação fora do escopo"
+    ]
+  },
+  "dataAudit": "cidades-auditoria.json",
+  "physicalDevice": "NÃO EXECUTADO",
+  "userValidation": "PENDENTE",
+  "gitCommit": false,
+  "gitPush": false,
+  "deploy": false,
+  "preview": "http://127.0.0.1:3018/dashpolitico/deputados-estaduais"
+}

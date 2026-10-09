@@ -1,98 +1,81 @@
 import { test, expect } from "@playwright/test";
 import fs from "node:fs";
 import path from "node:path";
-import type { Candidate, CandidateDetail } from "../../lib/types";
-
+import type { Candidate, CandidateDetail, Municipality } from "../../lib/types";
 const root = process.env.TEST_SUBPATH ?? "";
 const snapshot = JSON.parse(fs.readFileSync("public/data/current.json", "utf8"));
-const base = path.join("public", snapshot.base);
-const candidates: Candidate[] = JSON.parse(fs.readFileSync(path.join(base, "candidates.json"), "utf8"));
-const detail = (id: string): CandidateDetail => JSON.parse(fs.readFileSync(path.join(base, "candidates", id + ".json"), "utf8"));
-const number = (n: number) => new Intl.NumberFormat("pt-BR").format(n);
-
-for (const office of [6, 7]) {
-  const d = candidates.filter(c => c.office === office && c.elected).map(c => detail(c.id)).find(d =>
-    d.cities.some(m => m.votes === 0) && d.cities.some(m => m.votes > 0 && !m.leader))!;
-  test(`sidebar → duas visoes → cidades com votos do cargo ${office}`, async ({ page }) => {
+const read = (file: string) => JSON.parse(fs.readFileSync(path.join("public", snapshot.base, file), "utf8"));
+const cities: Municipality[] = read("municipalities.json");
+const fmt = (n: number) => new Intl.NumberFormat("pt-BR").format(n);
+for (const office of [6, 7, 8]) {
+  test(`Cidades inclui todos os votados do cargo ${office}`, async ({ page }) => {
     const errors: string[] = [];
     page.on("pageerror", e => errors.push(e.message));
-    await page.goto(root + "/");
-    await page.getByRole("navigation", { name: "Navegação principal" }).getByRole("link", {
-      name: office === 6 ? "Deputados Federais" : "Deputados Estaduais", exact: true,
-    }).click();
-    await expect(page.locator("h1")).toHaveText(office === 6 ? "Deputados Federais" : "Deputados Estaduais e Distritais");
-    await page.getByRole("combobox", { name: "Estado", exact: true }).selectOption(d.candidate.uf);
-    await page.getByLabel("Parlamentar ou partido").fill(d.candidate.name);
-    await page.getByRole("button", { name: "Onde recebeu votos", exact: true }).click();
-    await expect(page.getByRole("combobox", { name: "Estado", exact: true })).toHaveValue(d.candidate.uf);
-    await page.getByRole("link", { name: d.candidate.name, exact: true }).click();
-    await expect(page).toHaveURL(new RegExp(`/deputados/${d.candidate.id}/votos$`));
-    await expect(page.getByRole("button", { name: "Onde recebeu votos", exact: true })).toHaveAttribute("aria-pressed", "true");
-    const expected = d.cities.filter(m => m.votes > 0).sort((a,b) => b.votes-a.votes || a.name.localeCompare(b.name,"pt-BR"));
-    await expect(page.locator(".result-count")).toContainText(number(expected.length) + " cidades");
-    while (await page.getByRole("button", { name: "Ver mais cidades" }).isVisible()) {
-      await page.getByRole("button", { name: "Ver mais cidades" }).click();
-    }
+    const section = office === 6 ? "deputados-federais" : "deputados-estaduais";
+    const city = cities.find(c => c.uf === (office === 8 ? "DF" : "AC") && c.capital)!;
+    await page.goto(root + "/" + section);
+    await expect(page.getByRole("link", {name:"Cidades",exact:true})).toBeVisible();
+    await page.getByRole("link", {name:"Cidades",exact:true}).click();
+    await page.getByRole("combobox", {name:"Estado",exact:true}).selectOption(city.uf);
+    await page.getByLabel("Pesquisar município").fill(city.name);
+    await page.locator(".city-options").getByRole("link", {name:city.name + " / " + city.uf,exact:true}).click();
+    await expect(page.locator("h1")).toHaveText(city.name + " / " + city.uf);
+    const expected: Candidate[] = read("municipal-votes/" + city.id + ".json").results[office].candidates;
+    expect(expected.some(c => !c.elected)).toBe(true);
+    await expect(page.locator(".city-votes .result-count")).toContainText(fmt(expected.length) + " candidatos");
+    while (await page.getByRole("button", {name:/Ver mais \(/}).isVisible()) await page.getByRole("button", {name:/Ver mais \(/}).click();
     await expect(page.locator("tbody tr")).toHaveCount(expected.length);
-    expect(await page.locator("tbody tr td:first-child").allTextContents()).toEqual(expected.map(m => m.name));
-    expect(await page.locator("tbody tr td:nth-child(2)").allTextContents()).toEqual(expected.map(m => number(m.votes)));
-    const nonLeader = expected.find(m => !m.leader)!;
-    await page.getByLabel("Pesquisar cidade").fill(nonLeader.name);
-    await expect(page.locator("tbody").getByRole("link", { name: nonLeader.name, exact: true })).toBeVisible();
-    await page.getByLabel("Pesquisar cidade").fill(d.cities.find(m => m.votes === 0)!.name);
-    await expect(page.getByRole("heading", { name: "Nenhuma cidade nesta seleção" })).toBeVisible();
-    await page.getByLabel("Pesquisar cidade").fill("");
-    await page.getByRole("combobox", {name:"Ordenar cidades",exact:true}).selectOption("percent");
-    const byPercent = [...expected].sort((a,b) => (b.percent ?? -1)-(a.percent ?? -1) || b.votes-a.votes || a.name.localeCompare(b.name,"pt-BR"));
-    await expect(page.locator("tbody tr td:first-child").first()).toHaveText(byPercent[0].name);
+    expect(await page.locator("tbody td:nth-child(4) strong").allTextContents()).toEqual(expected.map(c => fmt(c.votes)));
+    expect(await page.locator("tbody td:first-child").allTextContents()).toEqual(expected.map(c => String(c.rank)));
+    const other = expected.find(c => !c.elected)!;
+    await page.getByLabel("Candidato ou partido").fill(other.name);
+    await expect(page.locator("tbody")).toContainText(other.status);
+    await expect(page.locator("tbody tr").filter({hasText:other.number}).locator("td").first()).toHaveText(String(other.rank));
+    await expect(page.locator("tbody").getByRole("link",{name:other.name,exact:true})).toHaveCount(0);
+    await page.getByLabel("Candidato ou partido").fill("");
+    await page.getByRole("combobox",{name:"Situação eleitoral",exact:true}).selectOption("elected");
+    await expect(page.locator(".city-votes .result-count")).toContainText(fmt(expected.filter(c => c.elected).length) + " candidatos");
+    await page.getByRole("combobox",{name:"Situação eleitoral",exact:true}).selectOption("all");
     await page.reload();
-    await expect(page.getByRole("button", { name: "Onde recebeu votos", exact: true })).toHaveAttribute("aria-pressed", "true");
-    await expect(page.getByRole("img", {name:"Mapa territorial de " + d.candidate.name})).toBeVisible();
-    await page.screenshot({ path: `test-results/territorio-${office}-desktop.png`, fullPage: true });
-    await page.getByRole("button", { name: "Onde liderou", exact: true }).click();
-    await expect(page.locator(".result-count")).toContainText(number(d.cities.filter(m => m.leader && m.votes > 0).length) + " cidades");
-    await page.getByLabel("Pesquisar cidade").fill(nonLeader.name);
-    await expect(page.getByRole("heading", { name: "Nenhuma cidade nesta seleção" })).toBeVisible();
+    await expect(page.locator("tbody tr").first()).toBeVisible();
+    await page.screenshot({path:`test-results/cidades-${office}.png`,fullPage:true});
+    if (office === 7) {
+      await page.setViewportSize({width:390,height:844});
+      expect(await page.locator("body").evaluate(el => el.scrollWidth <= window.innerWidth)).toBe(true);
+      await page.screenshot({path:"test-results/cidades-mobile.png",fullPage:true});
+      await page.getByRole("columnheader",{name:"Posição",exact:true}).scrollIntoViewIfNeeded();
+      await page.locator(".table-wrap").evaluate(el => {el.scrollLeft = el.scrollWidth;});
+      await expect(page.getByRole("columnheader",{name:"Situação",exact:true})).toBeInViewport();
+    }
     expect(errors).toEqual([]);
   });
 }
-
-test("distrital sem lideranca pode ter votos; mobile e navegacao municipal", async ({ page }) => {
-  const d = candidates.filter(c => c.office === 8 && c.elected).map(c => detail(c.id)).find(d => d.receivedCount > 0 && d.leaderCount === 0 && d.tiedCount === 0)!;
-  await page.setViewportSize({width:390,height:844});
+test("Deputados reúne votação e liderança", async ({page}) => {
+  const candidates: Candidate[] = read("candidates.json");
+  const d: CandidateDetail = candidates.filter(c => c.office === 7 && c.elected).map(c => read("candidates/" + c.id + ".json")).find(d => d.receivedCount > d.leaderCount + d.tiedCount);
   await page.goto(root + "/deputados-estaduais");
-  await page.getByRole("combobox", {name:"Estado",exact:true}).selectOption("DF");
   await page.getByLabel("Parlamentar ou partido").fill(d.candidate.name);
-  await page.getByRole("button", {name:"Onde recebeu votos",exact:true}).click();
-  await page.getByRole("link", {name:d.candidate.name,exact:true}).click();
+  await page.getByRole("link",{name:d.candidate.name,exact:true}).click();
   await expect(page.locator("h1")).toHaveText(d.candidate.name);
-  await expect(page.getByRole("button", {name:"Onde recebeu votos",exact:true})).toHaveAttribute("aria-pressed","true");
-  await expect(page.getByRole("img", {name:"Mapa territorial de " + d.candidate.name})).toBeVisible();
-  await expect(page.locator("tbody tr")).toHaveCount(1);
-  await page.screenshot({path:"test-results/territorio-mobile.png",fullPage:true});
-  const overflow = await page.locator("body").evaluate(el => ({
-    width: el.scrollWidth, viewport: window.innerWidth,
-    elements: Array.from(el.querySelectorAll("*"))
-      .filter(e => e.getBoundingClientRect().right > window.innerWidth + 1)
-      .slice(0, 12).map(e => ({tag:e.tagName, className:e.className, width:e.getBoundingClientRect().width})),
-  }));
-  expect(overflow.width, JSON.stringify(overflow)).toBeLessThanOrEqual(overflow.viewport);
-  await page.getByRole("button", {name:"Onde liderou",exact:true}).click();
-  await expect(page.getByRole("heading", {name:"Nenhuma cidade nesta seleção"})).toBeVisible();
-  await page.getByRole("button", {name:"Onde recebeu votos",exact:true}).click();
-  await page.locator("tbody a").click();
-  await expect(page.locator(".leader-card")).toHaveCount(2);
+  await expect(page.locator(".result-count")).toContainText(fmt(d.receivedCount) + " cidades");
+  const filter = page.getByRole("checkbox",{name:"Somente cidades onde liderou"});
+  await expect(filter).not.toBeChecked();
+  await filter.check();
+  await expect(page).toHaveURL(/\/liderancas$/);
+  await expect(page.locator(".result-count")).toContainText(fmt(d.leaderCount + d.tiedCount) + " cidades");
+  await filter.uncheck();
+  await expect(page).toHaveURL(/\/votos$/);
+  await expect(page.locator(".result-count")).toContainText(fmt(d.receivedCount) + " cidades");
+  await expect(page.getByRole("img",{name:"Mapa territorial de " + d.candidate.name})).toBeVisible();
+  await page.screenshot({path:"test-results/deputados-unificado.png",fullPage:true});
 });
 
-test("empates continuam liderancas e Senado preserva consulta de votos", async ({ page }) => {
-  const audit=JSON.parse(fs.readFileSync("docs/independent-audit.json","utf8"));
-  const d=detail(audit.ties[0].leaders[0]);
-  const city=d.cities.find(m=>m.id===audit.ties[0].city)!;
-  await page.goto(root+"/deputados/"+d.candidate.id);
+test("filtro de liderança preserva empate real", async ({page}) => {
+  const audit = JSON.parse(fs.readFileSync("docs/independent-audit.json","utf8"));
+  const tie = audit.ties[0];
+  const city = cities.find(c => c.id === tie.city)!;
+  await page.goto(root + "/deputados/" + tie.leaders[0] + "/liderancas");
   await page.getByLabel("Pesquisar cidade").fill(city.name);
   await expect(page.locator("tbody")).toContainText("1º · Empate");
-  const senator=candidates.find(c=>c.office===5 && c.elected)!;
-  await page.goto(root+"/deputados/"+senator.id);
-  await expect(page.getByRole("button",{name:"Onde liderou",exact:true})).toHaveCount(0);
-  await expect(page.locator("tbody tr").first()).toBeVisible();
+  await expect(page.getByRole("checkbox",{name:"Somente cidades onde liderou"})).toBeChecked();
 });

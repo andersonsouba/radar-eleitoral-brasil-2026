@@ -1,6 +1,6 @@
 services:
   dashpolitico:
-    image: radar-eleitoral:20261009-visoes
+    image: radar-eleitoral:20261009-cidades
     build:
       context: .
       args:
