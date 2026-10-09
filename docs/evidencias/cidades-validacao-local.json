@@ -21,13 +21,19 @@
     "skippedReasons": [
       "Snapshot sem município com ambos os cargos pendentes",
       "Teste exclusivo de produção HTTPS: publicação fora do escopo"
-    ]
+    ],
+    "prePublicationRetest": {
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0
+    }
   },
   "dataAudit": "cidades-auditoria.json",
   "physicalDevice": "NÃO EXECUTADO",
-  "userValidation": "PENDENTE",
-  "gitCommit": false,
-  "gitPush": false,
-  "deploy": false,
-  "preview": "http://127.0.0.1:3018/dashpolitico/deputados-estaduais"
+  "userValidation": "APROVADO PARA GIT E PUBLICAÇÃO EM 09/10/2026",
+  "gitCommit": true,
+  "gitPush": true,
+  "deploy": true,
+  "preview": "http://127.0.0.1:3018/dashpolitico/deputados-estaduais",
+  "recordScope": "Validação local anterior à publicação; consultar cidades-publicacao.json para implantação."
 }

@@ -34,4 +34,4 @@ Validação automatizada local: build/TypeScript, ESLint e 20 testes Python pass
 
 Conferir as duas entradas da sidebar, abrir um deputado, alternar o filtro de liderança, escolher uma cidade e comparar eleitos/não eleitos. Na tela estreita, deslizar a tabela para ver votos e situação. Os testes de viewport móvel não substituem a validação em aparelho físico.
 
-Revisão aprovada pelo usuário para envio ao Git e publicação em 09/10/2026. Imagem prevista: `radar-eleitoral:20261009-cidades`. Estado efetivo e evidências da implantação: `deploy.md`. Rollback: release e imagem `20261009-visoes`.
+Revisão aprovada pelo usuário para envio ao Git e publicação em 09/10/2026. Imagem publicada: `radar-eleitoral:20261009-cidades`. Estado efetivo e evidências da implantação: `deploy.md`. Rollback: release e imagem `20261009-visoes`.

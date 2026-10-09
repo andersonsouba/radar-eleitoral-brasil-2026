@@ -4,7 +4,21 @@ Destino: https://hubnio.com.br/dashpolitico
 
 Repositório privado: https://github.com/andersonsouba/radar-eleitoral-brasil-2026
 
-## Versão atual — consultas territoriais de 09/10/2026
+## Versão atual — Deputados e Cidades (09/10/2026)
+
+Publicado após autorização do usuário. **Deputados** reúne todas as cidades com votos e o filtro de lideranças; **Cidades** lista todos os candidatos votados no cargo, incluindo não eleitos, nas seções estaduais/distritais e federais.
+
+- Código: `676d15f`, enviado à main do repositório privado.
+- Release: `cidades-20261009`; imagem `radar-eleitoral:20261009-cidades` saudável, implantação exit 0.
+- Diretório: `/opt/radar-eleitoral/releases/20261009-cidades`.
+- Pacote SHA-256: `5e07021f7ad6325cb38b775857c12aade0c51107a985d5588a979b0537009291`.
+- Base: `20261005T152605Z-0f9c851a-cidades-7a9853d3`, derivada da coleta de 05/10, sem atualização da totalização.
+- Cobertura auditada: 5.571 cidades; 1.797.486 registros positivos candidato/cidade, incluindo 1.400.297 de não eleitos.
+- HTTPS: ponteiro, resumo, duas consultas municipais e uma ficha de deputado idênticos aos arquivos locais auditados. Sete testes públicos aprovados, sem falhas ou ignorados, incluindo federal/estadual/distrital, liderança/empates, subdiretório e viewport móvel.
+- Rollback preservado: `/opt/radar-eleitoral/releases/20261009-visoes`, imagem `radar-eleitoral:20261009-visoes`.
+- Evidências: `evidencias/cidades-publicacao.json` e `evidencias/cidades-auditoria.json`.
+
+## Histórico — consultas territoriais de 09/10/2026
 
 Publicado e verificado no domínio: duas consultas para estaduais/distritais e federais, “Onde liderou” e “Onde recebeu votos”. Detalhes em `visoes-territoriais-20261009.md`.
 

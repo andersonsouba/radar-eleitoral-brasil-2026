@@ -1,0 +1,51 @@
+{
+  "verifiedAt": "2026-10-09T21:06:56.220859+00:00",
+  "url": "https://hubnio.com.br/dashpolitico",
+  "snapshot": "20261005T152605Z-0f9c851a-cidades-7a9853d3",
+  "collectionUnchanged": true,
+  "tlsCertificateValidation": true,
+  "codeCommit": "676d15f",
+  "release": "cidades-20261009",
+  "image": "radar-eleitoral:20261009-cidades",
+  "checks": [
+    {
+      "path": "/data/current.json",
+      "http": 200,
+      "matchesLocal": true,
+      "sha256": "1a77c6ee1f302f88faad0c8e6e07da2880ceb8ddab08aa431c3cb2f6f913514d"
+    },
+    {
+      "path": "/data/snapshots/20261005T152605Z-0f9c851a-cidades-7a9853d3/overview.json",
+      "http": 200,
+      "matchesLocal": true,
+      "sha256": "0303f0228ace5f5907355062c5f1ab02493b892fcc2b3e8d33cd8244c8c599fc"
+    },
+    {
+      "path": "/data/snapshots/20261005T152605Z-0f9c851a-cidades-7a9853d3/municipal-votes/AC-01392.json",
+      "http": 200,
+      "matchesLocal": true,
+      "sha256": "144652801bf9aa262f1c9d0185fd96a3cf09c2c7b1c0497007cfe449be9d6bf1"
+    },
+    {
+      "path": "/data/snapshots/20261005T152605Z-0f9c851a-cidades-7a9853d3/municipal-votes/DF-97012.json",
+      "http": 200,
+      "matchesLocal": true,
+      "sha256": "cdda630bce2f255ee8fcc27883e3b44c71362dc39c5ee12c60faf36a4d0756ab"
+    },
+    {
+      "path": "/data/snapshots/20261005T152605Z-0f9c851a-cidades-7a9853d3/candidates/10002544541.json",
+      "http": 200,
+      "matchesLocal": true,
+      "sha256": "4afa51f76a694a4c2bedecde0feff79a19814ab859383060b8b628fc3082ad41"
+    }
+  ],
+  "health": "healthy",
+  "deployExit": 0,
+  "packageSha256": "5e07021f7ad6325cb38b775857c12aade0c51107a985d5588a979b0537009291",
+  "rollback": "/opt/radar-eleitoral/releases/20261009-visoes",
+  "publicBrowserTests": {
+    "passed": 7,
+    "failed": 0,
+    "skipped": 0
+  }
+}
