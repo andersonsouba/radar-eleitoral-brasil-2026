@@ -266,10 +266,12 @@ export function CandidateTable({
   candidates,
   local = false,
   limit = 10,
+  detailSuffix = "",
 }: {
   candidates: Candidate[];
   local?: boolean;
   limit?: number;
+  detailSuffix?: "/votos" | "";
 }) {
   const [visible, setVisible] = useState(limit);
   return candidates.length ? (
@@ -296,7 +298,7 @@ export function CandidateTable({
                 </td>
                 <td>
                   {c.elected && [5, 6, 7, 8].includes(c.office) ? (
-                    <Link className="name-link" href={"/deputados/" + c.id}>
+                    <Link className="name-link" href={"/deputados/" + c.id + detailSuffix}>
                       {c.name}
                       <ChevronRight size={14} />
                     </Link>

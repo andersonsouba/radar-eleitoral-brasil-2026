@@ -6,7 +6,7 @@ Dashboard executivo local das eleições gerais de 2026, em português, com dado
 
 A ficha municipal apresenta **somente o deputado estadual/distrital e o deputado federal oficialmente eleitos com mais votos na cidade**. Primeiro identifica os eleitos no arquivo estadual, depois cruza sua votação municipal. Não eleitos jamais entram como líderes. Empates reais são explícitos, sem desempate inventado; votação zero não gera liderança. Não existe ranking completo municipal de deputados.
 
-A lista estadual pode ordenar todos os eleitos por votos. A página do parlamentar permite ordenar cidades por votos ou percentual e abre inicialmente nas cidades onde ele lidera entre os eleitos. Candidatos ao Senado têm detalhe municipal próprio, sem a métrica de liderança reservada a deputados.
+A lista estadual pode ordenar todos os eleitos por votos. Cada entrada da sidebar (Estaduais/Distritais e Federais) oferece duas consultas: **Onde liderou** e **Onde recebeu votos**. A segunda inclui todas as cidades com votação nominal positiva, mesmo sem liderança, e exclui cidades com zero votos. A escolha acompanha o link até a ficha (`/deputados/:id/votos`); links antigos abrem em liderança. Na ficha, as cidades podem ser ordenadas por votos ou percentual local. Empates de ordenação usam votos e nome para estabilidade, sem alterar as posições eleitorais oficiais. Candidatos ao Senado têm detalhe municipal próprio, sem a métrica de liderança reservada a deputados.
 
 ## Stack
 

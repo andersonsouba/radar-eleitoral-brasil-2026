@@ -164,6 +164,7 @@ export default function Dashboard() {
               <Route
                 section={section}
                 id={id}
+                territoryView={segments[2]}
                 snapshot={snapshot.data}
                 overview={overview.data}
               />
@@ -183,11 +184,13 @@ export default function Dashboard() {
 function Route({
   section,
   id,
+  territoryView,
   snapshot,
   overview,
 }: {
   section: string;
   id?: string;
+  territoryView?: string;
   snapshot: Snapshot;
   overview: Overview;
 }) {
@@ -233,7 +236,7 @@ function Route({
         <DeputiesPage snapshot={snapshot} overview={overview} offices={[6]} />
       );
     case "deputados":
-      return <DeputyPage snapshot={snapshot} id={id ?? ""} />;
+      return <DeputyPage snapshot={snapshot} id={id ?? ""} view={territoryView === "votos" ? "votes" : "leaders"} />;
     case "senado":
       return (
         <DeputiesPage snapshot={snapshot} overview={overview} offices={[5]} />

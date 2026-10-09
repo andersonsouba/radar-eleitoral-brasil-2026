@@ -69,6 +69,11 @@ export function Methodology({
               </strong>
             </div>
           </Panel>
+          <Panel title="Duas consultas por deputado">
+            <p><strong>Onde liderou:</strong> cidades onde o deputado teve a maior votação entre os oficialmente eleitos do mesmo cargo, incluindo empates reais.</p>
+            <p><strong>Onde recebeu votos:</strong> todas as cidades com votação nominal positiva para o deputado, independentemente de sua posição local. Cidades com zero votos ficam fora dessa consulta.</p>
+            <p>As duas visões estão nas entradas Deputados Estaduais (inclui Distritais) e Deputados Federais. Na ficha, ordene as cidades por votos absolutos ou percentual local. A coluna “Entre eleitos” informa a posição do deputado na cidade; não representa seu ranking na UF.</p>
+          </Panel>
           <Panel title="Votação não é eleição">
             <p>
               No sistema proporcional, a eleição depende das regras de

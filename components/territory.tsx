@@ -1,6 +1,8 @@
 "use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { TerritoryViews, type TerritoryView } from "./territory-views";
 import {
   MapPin,
   ShieldCheck,
@@ -243,10 +245,11 @@ export function DeputiesPage({
   );
   const [uf, setUF] = useState("");
   const [query, setQuery] = useState("");
+  const [view, setView] = useState<TerritoryView>("leaders");
   const filtered = (data ?? [])
     .filter(
       (c) =>
-        offices.includes(c.office) &&
+        c.elected && offices.includes(c.office) &&
         (!uf || c.uf === uf) &&
         fold(c.name + " " + c.party).includes(fold(query)),
     )
@@ -262,8 +265,11 @@ export function DeputiesPage({
               ? "Deputados Federais"
               : "Deputados Estaduais e Distritais"
         }
-        description="Selecione um eleito para abrir seu mapa territorial e a distribuição municipal de votos."
+        description={offices[0] === 5
+          ? "Selecione um eleito para abrir seu mapa territorial e a distribuição municipal de votos."
+          : "Escolha a consulta e selecione um deputado eleito para explorar suas cidades no mapa e na tabela."}
       />
+      {offices[0] !== 5 ? <TerritoryViews value={view} onChange={setView} /> : null}
       <Panel>
         <div className="filters">
           <StateSelect states={overview.states} value={uf} onChange={setUF} />
@@ -282,7 +288,7 @@ export function DeputiesPage({
               {fmt(filtered.length)} eleitos nesta seleção · ordenados por votos
               totais
             </div>
-            <CandidateTable key={uf + query} candidates={filtered} />
+            <CandidateTable key={uf + query} candidates={filtered} detailSuffix={offices[0] !== 5 && view === "votes" ? "/votos" : ""} />
           </>
         )}
       </Panel>
@@ -298,29 +304,34 @@ export function DeputiesPage({
 export function DeputyPage({
   snapshot,
   id,
+  view = "leaders",
 }: {
   snapshot: Snapshot;
   id: string;
+  view?: TerritoryView;
 }) {
+  const router = useRouter();
   const { data: d, error } = useResource<CandidateDetail>(
     snapshot.base + "/candidates/" + encodeURIComponent(id) + ".json",
   );
-  const [mode, setMode] = useState("leaders");
+  const [sort, setSort] = useState("votes");
   const [query, setQuery] = useState("");
   const [visible, setVisible] = useState(10);
   if (!d) return <Loading error={error} />;
   const c = d.candidate;
-  const activeMode = c.office === 5 && mode === "leaders" ? "votes" : mode;
+  const isDeputy = c.office !== 5;
+  const activeView = isDeputy ? view : "votes";
+  const activeMode = activeView === "leaders" ? "leaders" : sort;
   const rows = d.cities
     .filter(
       (m) =>
-        (activeMode !== "leaders" || m.leader) &&
+        (!isDeputy || m.votes > 0) &&
+        (activeView !== "leaders" || m.leader) &&
         fold(m.name).includes(fold(query)),
     )
     .sort((a, b) =>
-      activeMode === "percent"
-        ? (b.percent ?? 0) - (a.percent ?? 0)
-        : b.votes - a.votes,
+      (sort === "percent" ? (b.percent ?? -1) - (a.percent ?? -1) : 0) ||
+      b.votes - a.votes || a.name.localeCompare(b.name, "pt-BR"),
     );
   return (
     <>
@@ -368,54 +379,53 @@ export function DeputyPage({
         </div>
       ) : null}
       <Panel
-        title="Onde este parlamentar foi mais votado?"
+        title="Presença nos municípios"
         description={
           c.office === 5
             ? "Distribuição municipal de votos."
-            : "A liderança compara somente os deputados oficialmente eleitos do mesmo cargo."
+            : "Compare as cidades onde liderou com todas as cidades que contribuíram para sua votação."
         }
       >
-        <div className="tabs" aria-label="Métrica territorial">
-          {(c.office === 5
-            ? [
-                ["votes", "Votos absolutos"],
-                ["percent", "Percentual local"],
-              ]
-            : [
-                ["leaders", "Liderança entre eleitos"],
-                ["votes", "Votos absolutos"],
-                ["percent", "Percentual local"],
-              ]
-          ).map(([value, label]) => (
-            <button
-              key={value}
-              className={activeMode === value ? "selected" : ""}
-              onClick={() => {
-                setMode(value);
-                setVisible(10);
-              }}
-            >
-              {label}
-            </button>
-          ))}
+        {isDeputy ? (
+          <TerritoryViews
+            value={activeView}
+            counts={{leaders: d.leaderCount + d.tiedCount, votes: d.receivedCount}}
+            onChange={(next) => {
+              if (next !== activeView) router.push("/deputados/" + encodeURIComponent(id) + (next === "votes" ? "/votos" : ""), {scroll: false});
+            }}
+          />
+        ) : null}
+        <div className="filters territory-filters">
+          <SearchField
+            value={query}
+            onChange={(v) => {setQuery(v); setVisible(10);}}
+            label="Pesquisar cidade"
+            placeholder="Nome do município…"
+          />
+          <label className="field">
+            <span>Ordenar cidades</span>
+            <select value={sort} onChange={(e) => {setSort(e.target.value); setVisible(10);}}>
+              <option value="votes">Mais votos absolutos</option>
+              <option value="percent">Maior percentual local</option>
+            </select>
+          </label>
         </div>
+        <p className="territory-explanation">
+          {activeView === "leaders"
+            ? "Liderança entre os oficialmente eleitos do mesmo cargo. Empates reais são mantidos."
+            : isDeputy
+              ? "Somente cidades com votos positivos. Receber votos não significa liderar na cidade."
+              : "Distribuição municipal da votação oficial."}
+          {" "}% local: participação nos votos válidos do cargo na cidade.
+        </p>
         <div className="territory-grid">
           <TerritoryMap detail={d} mode={activeMode} />
           <div>
-            <SearchField
-              value={query}
-              onChange={(v) => {
-                setQuery(v);
-                setVisible(10);
-              }}
-              label="Pesquisar cidade"
-              placeholder="Nome do município…"
-            />
-            <div className="result-count">
+            <div className="result-count" role="status">
               {fmt(rows.length)} cidades ·{" "}
-              {activeMode === "leaders"
+              {activeView === "leaders"
                 ? "lideranças exclusivas e empates"
-                : activeMode === "percent"
+                : sort === "percent"
                   ? "maior participação local"
                   : "maior votação absoluta"}
             </div>
@@ -445,13 +455,13 @@ export function DeputyPage({
                           </td>
                           <td className="numeric">{fmt(m.votes)}</td>
                           <td className="numeric">{pct(m.percent)}</td>
-                          {c.office !== 5 ? (
+                          {isDeputy ? (
                             <td>
                               {m.votes === 0
                                 ? "Sem votos"
                                 : m.tie
                                   ? "1º · Empate"
-                                  : `${m.rank}º`}
+                                  : m.rank == null ? "—" : `${m.rank}º`}
                             </td>
                           ) : null}
                         </tr>
@@ -523,6 +533,7 @@ function TerritoryMap({
                 ? 1
                 : 0.15
               : 0.15 + 0.85 * Math.sqrt(value / max);
+          const included = c && c.votes > 0 && (mode !== "leaders" || c.leader);
           return (
             <a
               key={p.id}
@@ -545,8 +556,8 @@ function TerritoryMap({
             >
               <path
                 d={p.d}
-                fill="#32647c"
-                fillOpacity={opacity}
+                fill={included ? "#32647c" : "#dce3e8"}
+                fillOpacity={included ? opacity : 1}
                 className="map-city"
               >
                 <title>
@@ -565,6 +576,10 @@ function TerritoryMap({
           {mode === "leaders"
             ? "Cidade líder (inclui empate)"
             : "Maior intensidade = maior valor"}
+        </span>
+        <span>
+          <i style={{background: "#dce3e8"}} />
+          {mode === "leaders" ? "Sem liderança / sem dados" : "Sem votos / sem dados"}
         </span>
         <small>Malha: IBGE</small>
       </div>
