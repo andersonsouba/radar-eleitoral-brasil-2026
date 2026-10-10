@@ -213,6 +213,7 @@ function Route({
             snapshot={snapshot}
             states={overview.states}
             initialUF={id}
+            browse
           />
           <div className="notice">
             <ShieldCheck size={20} />

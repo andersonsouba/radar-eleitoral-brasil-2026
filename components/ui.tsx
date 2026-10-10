@@ -453,39 +453,53 @@ export function CityPicker({
   snapshot,
   states,
   initialUF = "",
+  browse = false,
 }: {
   snapshot: Snapshot;
   states: StateSummary[];
   initialUF?: string;
+  browse?: boolean;
 }) {
   const [uf, setUF] = useState(initialUF);
   const [query, setQuery] = useState("");
+  const [visible, setVisible] = useState(24);
   const { data, error } = useResource<Municipality[]>(
     snapshot.base + "/municipalities.json",
   );
-  const filtered = (data ?? [])
+  const matches = (data ?? [])
     .filter(
       (m) =>
         (!uf || m.uf === uf) &&
-        query.length >= 2 &&
-        fold(m.name).includes(fold(query)),
-    )
-    .slice(0, 15);
+        (browse || query.length >= 2) &&
+        fold(m.name).includes(fold(query.trim())),
+    );
+  const filtered = browse
+    ? matches.sort((a, b) => a.name.localeCompare(b.name, "pt-BR") || a.uf.localeCompare(b.uf))
+    : matches.slice(0, 15);
   return (
     <Panel
       title="Encontre um município"
-      description="Escolha a UF e digite ao menos duas letras do nome."
+      description={browse ? "Explore as cidades ou filtre por estado e nome." : "Escolha a UF e digite ao menos duas letras do nome."}
     >
       <div className="filters">
-        <StateSelect states={states} value={uf} onChange={setUF} />
+        <StateSelect states={states} value={uf} onChange={v => {setUF(v); setVisible(24);}} />
         <SearchField
           value={query}
-          onChange={setQuery}
-          label="Município"
+          onChange={v => {setQuery(v); setVisible(24);}}
+          label={browse ? "Pesquisar município" : "Município"}
           placeholder="Digite o nome da cidade…"
         />
       </div>
-      {error ? (
+      {browse ? !data ? <Loading error={error} /> : <>
+        <div className="result-count" role="status">{fmt(filtered.length)} cidades nesta seleção</div>
+        {filtered.length ? <div className="city-options">
+          {filtered.slice(0, visible).map(m => <Link href={"/municipios/" + m.id} key={m.id} aria-label={`${m.name} / ${m.uf}`}>
+            <span><strong>{m.name}</strong><small>{m.uf}{m.capital ? " · Capital" : ""}</small></span>
+            <ArrowUpRight size={17} />
+          </Link>)}
+        </div> : <Empty title="Município não encontrado" />}
+        {visible < filtered.length ? <button className="show-more" onClick={() => setVisible(v => v + 48)}>Ver mais cidades</button> : null}
+      </> : error ? (
         <Loading error={error} />
       ) : query.length >= 2 ? (
         <div className="search-results" aria-live="polite">

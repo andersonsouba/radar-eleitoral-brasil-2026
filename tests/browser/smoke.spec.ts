@@ -90,15 +90,35 @@ test("pendencia oficial nao vira vencedor local", async ({ page }) => {
   ).toHaveCount(2);
   await expect(page.locator(".leader-person")).toHaveCount(0);
 });
-test("busca sem acento navega para cidade real", async ({ page }) => {
-  await page.goto(root + "/municipios/AC");
-  await page.getByLabel("Município", { exact: true }).fill("rio branco");
+test("municipios visiveis, paginacao e filtros navegam para cidade real", async ({ page }) => {
+  await page.goto(root + "/municipios");
+  await expect(page.locator(".city-options a")).toHaveCount(24);
+  await page.getByRole("button", { name: "Ver mais cidades", exact: true }).click();
+  await expect(page.locator(".city-options a")).toHaveCount(72);
+  await page.getByRole("combobox", { name: "Estado", exact: true }).selectOption("AC");
+  await expect(page.locator(".city-options a")).toHaveCount(22);
+  await expect(page.getByRole("button", { name: "Ver mais cidades", exact: true })).toHaveCount(0);
+  await page.getByLabel("Pesquisar município", { exact: true }).fill("cidade inexistente xyz");
+  await expect(page.getByRole("heading", { name: "Município não encontrado", exact: true })).toBeVisible();
+  await page.getByLabel("Pesquisar município", { exact: true }).fill("rio branco");
+  await expect(page.locator(".city-options a")).toHaveCount(1);
+  await page.setViewportSize({ width: 390, height: 844 });
+  expect(await page.locator("body").evaluate(el => el.scrollWidth <= window.innerWidth)).toBe(true);
+  await page.screenshot({ path: "test-results/municipios-cartoes-mobile.png", fullPage: true });
   await page
-    .locator(".search-results")
+    .locator(".city-options")
     .getByRole("link")
     .filter({ hasText: "RIO BRANCO" })
     .click();
   await expect(page.locator("h1")).toHaveText("RIO BRANCO / AC");
+  await expect(page.locator(".leader-card")).toHaveCount(2);
+  await page.goto(root + "/municipios/AC");
+  await expect(page.getByRole("combobox", { name: "Estado", exact: true })).toHaveValue("AC");
+  await expect(page.locator(".city-options a")).toHaveCount(22);
+  await page.setViewportSize({ width: 1440, height: 1050 });
+  await page.goto(root + "/municipios");
+  await expect(page.locator(".city-options a")).toHaveCount(24);
+  await page.screenshot({ path: "test-results/municipios-cartoes-desktop.png", fullPage: true });
 });
 test("estado abre deputado e cidades lideres", async ({ page }) => {
   await page.goto(root + "/deputados/" + candidate.id);
