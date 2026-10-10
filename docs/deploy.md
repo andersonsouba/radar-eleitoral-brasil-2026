@@ -4,7 +4,20 @@ Destino: https://hubnio.com.br/dashpolitico
 
 Repositório privado: https://github.com/andersonsouba/radar-eleitoral-brasil-2026
 
-## Versão atual — Deputados e Cidades (09/10/2026)
+## Versão atual — Municípios em cartões (10/10/2026)
+
+A página `/municipios` abre com os primeiros 24 municípios em ordem alfabética, sem exigir uma busca inicial. Filtros por UF e nome, contador, paginação “Ver mais cidades” e links para as fichas municipais. O seletor compacto em Presidente permanece preservado.
+
+- Código: `61767f5`, enviado à main privada após autorização do usuário.
+- Release: `municipios-20261010`; imagem `radar-eleitoral:20261010-municipios` saudável.
+- Diretório: `/opt/radar-eleitoral/releases/20261010-municipios`.
+- SHA-256 do pacote: `26c144707e6f1ae8b4139ed4b86df6a9878e899efa2fde9f097a561d6b01eb0c`.
+- Base eleitoral preservada: `20261005T152605Z-0f9c851a-cidades-7a9853d3`. Ponteiro e catálogo público em HTTPS conferidos byte a byte.
+- Rollback: `/opt/radar-eleitoral/releases/20261009-cidades`, imagem `radar-eleitoral:20261009-cidades`.
+- Validação pública: 5 testes de navegador passaram, sem falhas ou testes ignorados; cartões, filtros, paginação, fichas e navegação no subdiretório, com capturas desktop e mobile.
+- Evidências: `evidencias/municipios-publicacao.json` e `evidencias/municipios-publicado.png`.
+
+## Histórico — Deputados e Cidades (09/10/2026)
 
 Publicado após autorização do usuário. **Deputados** reúne todas as cidades com votos e o filtro de lideranças; **Cidades** lista todos os candidatos votados no cargo, incluindo não eleitos, nas seções estaduais/distritais e federais.
 

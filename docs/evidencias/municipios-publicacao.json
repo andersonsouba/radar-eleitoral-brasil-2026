@@ -1,0 +1,33 @@
+{
+  "verifiedAt": "2026-10-10T01:14:32.470595-03:00",
+  "url": "https://hubnio.com.br/dashpolitico/municipios",
+  "codeCommit": "61767f5",
+  "release": "municipios-20261010",
+  "snapshot": "20261005T152605Z-0f9c851a-cidades-7a9853d3",
+  "dataUnchanged": true,
+  "tlsCertificateValidation": true,
+  "checks": [
+    {
+      "path": "/data/current.json",
+      "http": 200,
+      "matchesLocal": true,
+      "sha256": "1a77c6ee1f302f88faad0c8e6e07da2880ceb8ddab08aa431c3cb2f6f913514d"
+    },
+    {
+      "path": "/data/snapshots/20261005T152605Z-0f9c851a-cidades-7a9853d3/municipalities.json",
+      "http": 200,
+      "matchesLocal": true,
+      "sha256": "e495f8c62b26d2e2d1fa53fff76bc44310655bd320e3a1f80cd5b3df128fd86c"
+    }
+  ],
+  "image": "radar-eleitoral:20261010-municipios",
+  "health": "healthy",
+  "packageSha256": "26c144707e6f1ae8b4139ed4b86df6a9878e899efa2fde9f097a561d6b01eb0c",
+  "rollback": "/opt/radar-eleitoral/releases/20261009-cidades",
+  "publicBrowserTests": {
+    "flaky": 0,
+    "passed": 5,
+    "skipped": 0,
+    "failed": 0
+  }
+}
