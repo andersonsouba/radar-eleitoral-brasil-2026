@@ -48,8 +48,10 @@ def iter_candidates(data):
                     yield office, group, party, candidate
 
 
-def validate_result(data, election, office, scope):
-    if data.get('f') != 'o' or str(data.get('ele')) != str(election) or data.get('t') != '1':
+def validate_result(data, election, office, scope, round_number=1):
+    if round_number not in (1, 2):
+        raise ValueError('Turno esperado inválido')
+    if data.get('f') != 'o' or str(data.get('ele')) != str(election) or data.get('t') != str(round_number):
         raise ValueError('Ambiente, eleição ou turno incorreto')
     if str(data.get('cdabr')).lower() != scope.lower():
         raise ValueError('Abrangência incorreta')

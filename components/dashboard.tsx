@@ -115,7 +115,7 @@ export default function Dashboard() {
             Dados públicos oficiais<small>Justiça Eleitoral / TSE</small>
           </div>
         </div>
-        <div className="sidebar-foot">Painel independente · 1º turno</div>
+        <div className="sidebar-foot">Painel independente · Eleições 2026</div>
       </aside>
       {menu ? (
         <button
@@ -140,7 +140,7 @@ export default function Dashboard() {
             </span>
           </div>
           <div className="topbar-right">
-            <span className="round-tag">1º TURNO · 04 OUT 2026</span>
+            <span className="round-tag">{overview.data?.president.meta.round === 2 ? "2º TURNO · 25 OUT 2026" : "1º TURNO · 04 OUT 2026"}</span>
             <a
               href="https://resultados.tse.jus.br/oficial/app/index.html"
               target="_blank"
@@ -275,9 +275,9 @@ function Home({
   return (
     <>
       <Title
-        eyebrow="PAINEL EXECUTIVO · PRIMEIRO TURNO"
+        eyebrow={o.president.meta.round === 2 ? "PAINEL EXECUTIVO · SEGUNDO TURNO" : "PAINEL EXECUTIVO · PRIMEIRO TURNO"}
         title="ELEIÇÕES 2026 — RADAR ELEITORAL BRASIL"
-        description="Resultados oficiais da Justiça Eleitoral · 1º turno"
+        description={o.president.meta.round === 2 ? "Resultados oficiais da Justiça Eleitoral · Executivo atualizado após o 2º turno" : "Resultados oficiais da Justiça Eleitoral · 1º turno"}
         action={<SnapshotStamp snapshot={snapshot} />}
       />
       <div className="stats-grid six">
@@ -294,10 +294,10 @@ function Home({
         <Stat
           label="Governadores eleitos"
           value={fmt(o.governorsElected)}
-          note="Definidos no 1º turno"
+          note={o.president.meta.round === 2 ? "Confirmados no 1º e no 2º turno" : "Definidos no 1º turno"}
         />
         <Stat
-          label="UFs com 2º turno"
+          label={o.president.meta.round === 2 ? "UFs que disputaram 2º turno" : "UFs com 2º turno"}
           value={fmt(o.governorsSecondRound)}
           note="Governador · situação oficial"
         />

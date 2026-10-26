@@ -140,7 +140,7 @@ export function Source({ meta }: { meta: Meta }) {
   return (
     <div className="source-line">
       <span>
-        Fonte: TSE · {meta.sourceTime} ·{" "}
+        Fonte: TSE · {meta.round}º turno · {meta.sourceTime} ·{" "}
         {meta.final
           ? "Totalização final confirmada"
           : "Totalização final pendente"}

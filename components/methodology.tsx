@@ -22,6 +22,10 @@ export function Methodology({
       />
       <div className="method-layout">
         <div>
+          <Panel title="Turnos e atualização dos dados">
+            <p>Presidente: resultado do {o.president.meta.round}º turno, na abrangência nacional, incluindo o exterior. Governadores: resultado do turno decisivo de cada UF. O turno e a data de cada resultado aparecem junto à fonte oficial.</p>
+            <p>Deputados e Senado mantêm os resultados do primeiro turno e seus horários originais de coleta. A atualização do Executivo não altera as lideranças legislativas municipais. Na consulta de partidos para governador, os votos correspondem ao turno decisivo de cada UF; não são a soma dos dois turnos.</p>
+          </Panel>
           <Panel title="Uma cidade, um líder eleito por cargo">
             <p>
               Os destaques municipais de deputados consideram apenas candidatos

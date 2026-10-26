@@ -145,6 +145,7 @@ export type Validation = {
 };
 export type Overview = {
   settings: {
+    executiveRound?: number;
     date: string;
     poll: string;
     offices: Record<string, string>;
@@ -164,6 +165,7 @@ export type Overview = {
   builtAt: string;
   governorsElected: number;
   governorsSecondRound: number;
+  governorsPending?: number;
 };
 export type Snapshot = {
   municipalVotes?: boolean;
