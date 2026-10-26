@@ -2,7 +2,7 @@
 
 ## Estado
 
-Preparação local concluída; publicação em preparação pelo terminal web da Hostinger aberto pelo usuário. O domínio de produção permanece na versão de 10/10 até concluir teste isolado e troca do serviço.
+Publicado em `https://hubnio.com.br/dashpolitico` às 12h29 de 26/10/2026, pelo terminal web da Hostinger aberto pelo usuário. Implantação exit 0, saúde aprovada e conferência HTTPS externa concluída às 12h30. Código e pacote estão no GitHub, na branch do PR #1 e na release `executivo-20261026`.
 
 ## Dados
 
@@ -28,4 +28,4 @@ O atualizador valida ambiente oficial, eleição, cargo, turno e abrangência; a
 - Auditoria integral contra os arquivos brutos e preservação do legislativo: `evidencias/executivo-20261026-auditoria.json`.
 - Capturas: `evidencias/executivo-20261026-presidente.png` e `evidencias/executivo-20261026-governadores.png`.
 
-Para publicar depois, usar o pacote preparado com código e o snapshot completo. A imagem proposta é `radar-eleitoral:20261026-executivo`; manter como rollback a implantação `/opt/radar-eleitoral/releases/20261010-municipios`. Antes da troca, verificar saúde do serviço atual e o checksum do pacote. Construir a nova imagem e validar em container isolado antes de substituir somente `nio-dashpolitico`. Conferir saúde e os JSON públicos após a publicação. Nenhum comando de implantação foi executado nesta atualização.
+O pacote publicado contém código e snapshot completo; SHA-256 `db8fe625fa7ad246a3feb0b35407eb8338bfbe34822998b06f372c22c7acdd19`. A imagem ativa é `radar-eleitoral:20261026-executivo`; rollback preservado em `/opt/radar-eleitoral/releases/20261010-municipios`. O script conferiu a saúde anterior e o checksum, construiu e validou a imagem em container isolado, substituiu somente `nio-dashpolitico` e confirmou saúde e igualdade dos JSON públicos. Evidência externa em `evidencias/executivo-20261026-publicacao.json`.

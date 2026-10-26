@@ -11,6 +11,6 @@
 - [x] Corrigir legendas, filtros e metodologia de turnos na interface existente.
 - [x] Coletar, auditar preservação do legislativo e conferir os resultados contra os brutos.
 - [x] Executar testes Python, TypeScript e build; verificar a interface no navegador.
-- [ ] Enviar código e pacote validado ao GitHub; publicar na hospedagem quando o acesso SSH estiver disponível.
+- [x] Enviar código e pacote validado ao GitHub; publicar pelo terminal web da Hostinger e conferir o domínio público.
 
 **Acesso:** a chave SSH configurada para `nio-admin` foi recusada pela VPS. O usuário posteriormente abriu o terminal web da Hostinger, utilizado para a implantação sem alterar credenciais ou permissões.

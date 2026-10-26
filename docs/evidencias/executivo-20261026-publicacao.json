@@ -1,0 +1,65 @@
+{
+  "status": "PASS",
+  "verifiedAt": "2026-10-26T15:30:42.080735+00:00",
+  "url": "https://hubnio.com.br/dashpolitico",
+  "snapshot": "20261026T145857Z-executivo-c3048bd8",
+  "tlsCertificateValidation": true,
+  "checks": [
+    {
+      "path": "/data/current.json",
+      "http": 200,
+      "matchesLocal": true,
+      "sha256": "ac5ea16c8a84a7ac48d241a16344f40301c1324047dfe472af4ddb9f0aeb1d00"
+    },
+    {
+      "path": "/data/snapshots/20261026T145857Z-executivo-c3048bd8/overview.json",
+      "http": 200,
+      "matchesLocal": true,
+      "sha256": "de316cc0af9022704a46a34bb7dab1d502fa533b378fba8124edcc032760e2d9"
+    },
+    {
+      "path": "/data/snapshots/20261026T145857Z-executivo-c3048bd8/states/AC.json",
+      "http": 200,
+      "matchesLocal": true,
+      "sha256": "78cc83bdd41f33f75593f84e373a76aa062bf97f0ca882cdaed0d9ccced97e2c"
+    },
+    {
+      "path": "/data/snapshots/20261026T145857Z-executivo-c3048bd8/municipalities/AC-01120.json",
+      "http": 200,
+      "matchesLocal": true,
+      "sha256": "723313fa958f955014f339d6b89567c699c7c688927046240446e440639c362a"
+    },
+    {
+      "path": "/data/snapshots/20261026T145857Z-executivo-c3048bd8/candidates.json",
+      "http": 200,
+      "matchesLocal": true,
+      "sha256": "9e17d94f0b0b0d5c60b2d20b5f830ad6a4bc4c586b3b7ced297539fe9d00f8e8"
+    },
+    {
+      "path": "/",
+      "http": 200
+    },
+    {
+      "path": "/presidente",
+      "http": 200
+    },
+    {
+      "path": "/governadores",
+      "http": 200
+    },
+    {
+      "path": "/estados/AC",
+      "http": 200
+    },
+    {
+      "path": "/municipios/AC-01120",
+      "http": 200
+    },
+    {
+      "path": "/deputados-federais",
+      "http": 200
+    }
+  ],
+  "image": "radar-eleitoral:20261026-executivo",
+  "packageSha256": "db8fe625fa7ad246a3feb0b35407eb8338bfbe34822998b06f372c22c7acdd19"
+}
