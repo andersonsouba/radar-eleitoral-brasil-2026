@@ -33,6 +33,20 @@ Se a política do PowerShell bloquear ativação, chame diretamente `.\.venv\Scr
 
 ## Atualização em um comando
 
+### Presidente e governadores após o segundo turno
+
+Com uma base validada já instalada em `public/data`, execute:
+
+```powershell
+python scripts/update_executive.py
+# Em caso de interrupção, preserva os horários individuais dos arquivos já coletados:
+python scripts/update_executive.py --resume ID_DA_COLETA
+```
+
+O comando descobre as eleições do segundo turno pelos vínculos oficiais `cdt2` no catálogo do TSE. Atualiza presidente nacional (incluindo exterior), as 27 UFs e seus municípios; governadores usam o segundo turno onde previsto no catálogo e o primeiro turno nas demais UFs. Deputados, Senado e lideranças legislativas permanecem na coleta anterior. Cada resultado mantém fonte, turno, horário e hash próprios. A validação executiva fica em `executive-validation.json` no novo snapshot; os brutos e o manifesto ficam em `data/raw/<coleta>`. Nenhum dado é publicado na internet por esse comando.
+
+O atualizador completo abaixo continua destinado à reconstrução do **primeiro turno**, incluindo todos os cargos. Para atualizar apenas o Executivo após o segundo turno, use o comando acima.
+
 ```powershell
 python scripts/update_eleicoes.py
 ```

@@ -63,6 +63,17 @@ class ElectoralRules(unittest.TestCase):
         with self.assertRaises(ValueError):
             validate_result(malicious, '6259', 6, 'ac')
 
+    def test_second_round_requires_explicit_matching_round(self):
+        data = {'f': 'o', 'ele': '6258', 't': '2', 'tpabr': 'br', 'cdabr': 'br',
+                'carg': [{'cd': '1', 'agr': [{'par': [{'sg': 'PT', 'cand': [{'sqcand': '1', 'vap': '5'}]}]}]}],
+                's': {'ts': '10', 'st': '10'}, 'v': {'vv': '5'}}
+        validate_result(data, '6258', 1, 'br', round_number=2)
+        with self.assertRaises(ValueError):
+            validate_result(data, '6258', 1, 'br')
+        data['t'] = '1'
+        with self.assertRaises(ValueError):
+            validate_result(data, '6258', 1, 'br', round_number=2)
+
 
 if __name__ == "__main__":
     unittest.main()

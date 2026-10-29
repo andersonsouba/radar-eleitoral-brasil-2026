@@ -4,7 +4,24 @@ Destino: https://hubnio.com.br/dashpolitico
 
 Repositório privado: https://github.com/andersonsouba/radar-eleitoral-brasil-2026
 
-## Versão atual — Municípios em cartões (10/10/2026)
+## Versão atual — Executivo após segundo turno (26/10/2026)
+
+Publicado às 12h29 (Brasília), com teste isolado aprovado e implantação exit 0. Conferência externa por HTTPS às 12h30: ponteiro, resumo, UF AC, município AC-01120 e catálogo de candidatos idênticos ao snapshot auditado; seis rotas com HTTP 200. Página inicial e filtro das seis UFs do segundo turno conferidos no Chrome público.
+
+- Código implantado: `b8c159694fb136e9df40d37967ba3747ce6d250c`; PR #1.
+- Release GitHub: `executivo-20261026`; pacote `radar-eleitoral-executivo-20261026.tar.gz`.
+- SHA-256: `db8fe625fa7ad246a3feb0b35407eb8338bfbe34822998b06f372c22c7acdd19`.
+- Imagem saudável: `radar-eleitoral:20261026-executivo`; serviço `nio-dashpolitico`.
+- Diretório: `/opt/radar-eleitoral/releases/20261026-executivo`.
+- Snapshot: `20261026T145857Z-executivo-c3048bd8`; coleta executiva de 26/10, encerrada às 12h03.
+- Presidente: resultado oficial do segundo turno; governadores: 27 eleitos, seis UFs com disputa no segundo turno, nenhuma confirmação final pendente. Deputados e Senado preservados.
+- Auditoria: 11.197 resultados oficiais, 5.571 municípios, 27 UFs; nenhuma divergência de soma; dados legislativos preservados.
+- Rollback preservado: diretório `/opt/radar-eleitoral/releases/20261010-municipios`, imagem `radar-eleitoral:20261010-municipios`.
+- Evidências: `evidencias/executivo-20261026-auditoria.json`, `evidencias/executivo-20261026-publicacao.json` e `evidencias/executivo-20261026-publicado.png`.
+
+A implantação foi executada pelo terminal web da Hostinger aberto pelo usuário, sem alterar autenticação, permissões, DNS ou outros serviços. O script validou checksum, build, container isolado, rotas, snapshot e saúde antes de concluir a troca.
+
+## Histórico — Municípios em cartões (10/10/2026)
 
 A página `/municipios` abre com os primeiros 24 municípios em ordem alfabética, sem exigir uma busca inicial. Filtros por UF e nome, contador, paginação “Ver mais cidades” e links para as fichas municipais. O seletor compacto em Presidente permanece preservado.
 

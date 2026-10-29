@@ -1,0 +1,28 @@
+{
+  "status": "PASS",
+  "version": "20261026T145857Z-executivo-c3048bd8",
+  "officialResultsVerified": 11197,
+  "municipalities": 5571,
+  "states": 27,
+  "legislativeDataPreserved": true,
+  "governorsElected": 27,
+  "candidates": 18811,
+  "municipalRows": 5905334,
+  "governorsSecondRound": 6,
+  "governorsPending": 0,
+  "president": [
+    {
+      "name": "LULA",
+      "votes": 64256232,
+      "percent": 51.785182884,
+      "status": "ELEITO"
+    },
+    {
+      "name": "FLAVIO BOLSONARO",
+      "votes": 59826041,
+      "percent": 48.214817116,
+      "status": "NÃO ELEITO"
+    }
+  ],
+  "aggregationDivergences": []
+}

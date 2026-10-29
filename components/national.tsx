@@ -29,28 +29,28 @@ export function GovernorsPage({ overview: o }: { overview: Overview }) {
     (s) =>
       filter === "all" ||
       (filter === "elected"
-        ? s.offices["3"].elected > 0
-        : s.offices["3"].secondRound > 0),
+        ? s.offices["3"].elected > 0 && s.offices["3"].meta.round === 1
+        : s.offices["3"].meta.round === 2 || s.offices["3"].secondRound > 0),
   );
   return (
     <>
       <Title
         eyebrow="PODER EXECUTIVO / ESTADOS"
         title="Governadores"
-        description="Eleitos no primeiro turno e classificados ao segundo, conforme a situação oficial."
+        description="Resultados do turno decisivo em cada UF, conforme a situação oficial da Justiça Eleitoral."
       />
       <div className="lower-grid">
         <Panel title="Situação nas UFs">
           <BrazilMap states={o.states} mode="governors" />
         </Panel>
-        <Panel title="Decisões do 1º turno">
+        <Panel title="Situação dos governadores">
           <div className="stats-grid two">
             <Stat
               label="Governadores eleitos"
               value={fmt(o.governorsElected)}
             />
             <Stat
-              label="UFs com 2º turno"
+              label={o.president.meta.round === 2 ? "UFs que disputaram 2º turno" : "UFs com 2º turno"}
               value={fmt(o.governorsSecondRound)}
             />
           </div>
@@ -59,6 +59,7 @@ export function GovernorsPage({ overview: o }: { overview: Overview }) {
             <span>
               Data do 2º turno:{" "}
               {o.settings.secondRoundDate ?? calendar.secondRoundDate}.
+              {o.governorsPending != null ? ` ${o.governorsPending} UFs aguardam confirmação final.` : ""}
             </span>
           </div>
           <p className="panel-footnote">
@@ -91,6 +92,7 @@ export function GovernorsPage({ overview: o }: { overview: Overview }) {
                 <h3>{s.name}</h3>
                 <ArrowUpRight size={17} />
               </Link>
+              <p className="panel-footnote">Resultado do {s.offices["3"].meta.round}º turno</p>
               {s.offices["3"].highlights.length ? (
                 s.offices["3"].highlights.map((c) => (
                   <div key={c.id}>
@@ -102,6 +104,7 @@ export function GovernorsPage({ overview: o }: { overview: Overview }) {
                 <Empty title="Em totalização" />
               )}
               <Progress meta={s.offices["3"].meta} />
+              <Source meta={s.offices["3"].meta} />
             </div>
           ))}
         </div>
@@ -122,7 +125,7 @@ export function PresidentPage({
       <Title
         eyebrow="PODER EXECUTIVO / BRASIL"
         title="Presidente da República"
-        description="Resultado nacional, incluindo o exterior. A situação oficial é independente da liderança em votos."
+        description={`Resultado nacional do ${r.meta.round}º turno, incluindo o exterior. A situação oficial é independente da liderança em votos.`}
         action={<SnapshotStamp snapshot={snapshot} />}
       />
       <div className="lower-grid">
@@ -145,7 +148,9 @@ export function PresidentPage({
             <Clock3 size={18} />
             2º turno: {o.settings.secondRoundDate ??
               calendar.secondRoundDate}.{" "}
-            {r.candidates.some((c) => c.secondRound)
+            {r.meta.round === 2
+              ? "Resultado do segundo turno. Situação conforme a totalização oficial."
+              : r.candidates.some((c) => c.secondRound)
               ? "Classificados identificados pela situação oficial."
               : "Classificados ainda não confirmados neste snapshot."}
           </div>
